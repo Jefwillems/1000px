@@ -1,0 +1,34 @@
+{
+  "name": "backend1000px",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run": "nodemon ./server.js localhost 3000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jefwillems/1000px.git"
+  },
+  "keywords": [
+    "pictures",
+    "social",
+    "media"
+  ],
+  "author": "Jef Willems",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jefwillems/1000px/issues"
+  },
+  "homepage": "https://github.com/Jefwillems/1000px#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.15.5",
+    "mongodb": "^2.2.31"
+  },
+  "devDependencies": {
+    "eslint": "^4.7.2",
+    "nodemon": "^1.12.1"
+  }
+}
