@@ -14,6 +14,8 @@ authRoutes.post('/login', (req, res) => {
                 success: false,
                 message: 'Authentication failed. User not found.'
             });
+        } else if (user) {
+            
         }
     });
 });
