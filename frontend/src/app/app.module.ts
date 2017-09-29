@@ -1,3 +1,4 @@
+import { ProfileModule } from './profile/profile.module';
 import { DiscoverModule } from './discover/discover.module';
 import { BlogModule } from './blog/blog.module';
 import { BrowserModule } from '@angular/platform-browser';
@@ -21,6 +22,7 @@ import { NavigationComponent } from './navigation/navigation.component';
     HomeModule,
     BlogModule,
     DiscoverModule,
+    ProfileModule,
     AppRoutingModule
   ],
   providers: [],
