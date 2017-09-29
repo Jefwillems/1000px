@@ -1,3 +1,19 @@
-<p>
-  navigation works!
-</p>
+<div class="nav-bg">
+  <img src="assets/img/triangle-white.svg" alt="etecatcher" class="triangle">
+</div>
+<nav>
+  <ul>
+    <a [routerLink]="['/']">
+      <li>Home</li>
+    </a>
+    <a [routerLink]="['/discover']">
+      <li>Discover</li>
+    </a>
+    <a [routerLink]="['/blog']">
+      <li>Blog</li>
+    </a>
+    <a [routerLink]="['/account']">
+      <li>Account</li>
+    </a>
+  </ul>
+</nav>
