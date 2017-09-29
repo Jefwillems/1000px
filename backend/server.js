@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
+const passport = require('passport');
 const databaseConfig = require('./config/database'); // get our config file
 
 const cors = require('cors');
@@ -29,6 +30,8 @@ app.use(bodyParser.urlencoded({
     extended: false
 }));
 app.use(bodyParser.json());
+
+app.use(passport.initialize());
 
 app.use(morgan('dev'));
 
