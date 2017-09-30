@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 
+
 @Injectable()
 export class StorageManagerService {
 
@@ -16,5 +17,9 @@ export class StorageManagerService {
 
   public exists(key: string) {
     return sessionStorage.getItem(key) !== null;
+  }
+
+  public removeItem(key: string) {
+    sessionStorage.removeItem(key);
   }
 }
