@@ -1,3 +1,6 @@
+import { SignupComponent } from './shared/components/signup/signup.component';
+import { LoginComponent } from './shared/components/login/login.component';
+import { AuthService } from './shared/services/auth.service';
 import { ProfileModule } from './profile/profile.module';
 import { DiscoverModule } from './discover/discover.module';
 import { BlogModule } from './blog/blog.module';
@@ -16,6 +19,8 @@ import { NavigationComponent } from './navigation/navigation.component';
   declarations: [
     AppComponent,
     NavigationComponent,
+    LoginComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,
@@ -25,7 +30,7 @@ import { NavigationComponent } from './navigation/navigation.component';
     ProfileModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

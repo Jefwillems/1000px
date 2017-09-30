@@ -20,14 +20,17 @@ nav {
   ul {
     list-style-type: none;
     padding: 0;
-    a {
-      color: #fff;
-      text-decoration: none;
-      li {
-        display: inline-block;
-        margin: 0 10px;
-        &:hover {
-          text-decoration: underline;
+    div {
+      display: inline-block;
+      a {
+        color: #fff;
+        text-decoration: none;
+        li {
+          display: inline-block;
+          margin: 0 10px;
+          &:hover {
+            text-decoration: underline;
+          }
         }
       }
     }
