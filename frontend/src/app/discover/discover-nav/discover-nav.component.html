@@ -1,17 +1,13 @@
-<ul>
-  <div>
-    <a [routerLink]="['/discover/editors']" routerLinkActive="active-link">
-      <li>Editors</li>
-    </a>
+<nav>
+  <div class="page-nav-wrapper">
+    <div>
+      <a [routerLink]="['/discover/editors']" routerLinkActive="active-link">Editors' Picks</a>
+    </div>
+    <div>
+      <a [routerLink]="['/discover/popular']" routerLinkActive="active-link">Popular</a>
+    </div>
+    <div>
+      <a [routerLink]="['/discover/fresh']" routerLinkActive="active-link">Fresh</a>
+    </div>
   </div>
-  <div>
-    <a [routerLink]="['/discover/popular']" routerLinkActive="active-link">
-      <li>Popular</li>
-    </a>
-  </div>
-  <div>
-    <a [routerLink]="['/discover/fresh']" routerLinkActive="active-link">
-      <li>Fresh</li>
-    </a>
-  </div>
-</ul>
+</nav>
