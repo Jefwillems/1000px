@@ -1,3 +1,5 @@
+import { Http, HttpModule } from '@angular/http';
+import { SharedModule } from './shared/shared.module';
 import { SignupComponent } from './shared/components/signup/signup.component';
 import { LoginComponent } from './shared/components/login/login.component';
 import { AuthService } from './shared/services/auth.service';
@@ -19,8 +21,6 @@ import { NavigationComponent } from './navigation/navigation.component';
   declarations: [
     AppComponent,
     NavigationComponent,
-    LoginComponent,
-    SignupComponent
   ],
   imports: [
     BrowserModule,
@@ -28,6 +28,7 @@ import { NavigationComponent } from './navigation/navigation.component';
     BlogModule,
     DiscoverModule,
     ProfileModule,
+    SharedModule,
     AppRoutingModule
   ],
   providers: [AuthService],

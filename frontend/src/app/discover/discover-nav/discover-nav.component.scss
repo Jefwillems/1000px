@@ -1,0 +1,28 @@
+$link-active-color:#0099e5;
+$link-color:#71767a;
+ul {
+  list-style-type: none;
+  padding: 0;
+  border-bottom: 1px solid #eeeff2;
+  box-sizing: border-box;
+  div {
+    display: inline-block;
+    a {
+      color: $link-color;
+      text-decoration: none;
+      padding: 15px 25px;
+      font-weight: bold;
+      li {
+        display: inline-block;
+        margin: 0 10px;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+      &.active-link {
+        color: $link-active-color;
+        border-bottom: 2px solid $link-active-color;
+      }
+    }
+  }
+}
