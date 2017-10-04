@@ -3,17 +3,26 @@
 </div>
 <nav>
   <ul>
-    <a [routerLink]="['/']">
-      <li>Home</li>
-    </a>
-    <a [routerLink]="['/discover']">
-      <li>Discover</li>
-    </a>
-    <a [routerLink]="['/blog']">
-      <li>Blog</li>
-    </a>
-    <a [routerLink]="['/account']">
-      <li>Account</li>
-    </a>
+    <div>
+      <a [routerLink]="['/']">
+        <li>Home</li>
+      </a>
+    </div>
+    <div>
+      <a [routerLink]="['/discover']">
+        <li>Discover</li>
+      </a>
+    </div>
+    <div>
+      <a [routerLink]="['/blog']">
+        <li>Blog</li>
+      </a>
+    </div>
+    <div *ngIf='isLoggedIn'>
+      <a [routerLink]="['/account']">
+        <li>Account</li>
+      </a>
+    </div>
+
   </ul>
 </nav>

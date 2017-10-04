@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "run": "nodemon ./server.js localhost 3000"
+    "start": "node ./server.js",
+    "test": "nodemon ./server.js localhost 3000"
   },
   "repository": {
     "type": "git",
@@ -23,9 +23,20 @@
   },
   "homepage": "https://github.com/Jefwillems/1000px#readme",
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
     "express": "^4.15.5",
-    "mongodb": "^2.2.31"
+    "jsonwebtoken": "^8.0.1",
+    "mongodb": "^2.2.31",
+    "mongoose": "^4.11.13",
+    "morgan": "^1.9.0",
+    "passport": "^0.4.0",
+    "passport-facebook": "^2.1.1",
+    "passport-github2": "^0.1.11",
+    "passport-google-oauth": "^1.0.0",
+    "passport-jwt": "^3.0.0",
+    "passport-twitter": "^1.0.4"
   },
   "devDependencies": {
     "eslint": "^4.7.2",
