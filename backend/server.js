@@ -16,7 +16,7 @@ mongoose.connect(databaseConfig.database, {
 }); // connect to database
 app.set('superSecret', databaseConfig.secret); // secret variable
 
-//cors configuration
+//cors configuration //CROSS-DOMAIN errors
 const corsOptions = {
     origin: '*',
     "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
@@ -25,23 +25,27 @@ const corsOptions = {
 }
 app.use(cors(corsOptions));
 
-// use body parser so we can get info from POST and/or URL parameters
+// get info from POST and/or URL parameters
 app.use(bodyParser.urlencoded({
-    extended: false
+    extended: false //Don't switch between querystring and qs library
 }));
 app.use(bodyParser.json());
 
+//Use passport for authentication
 app.use(passport.initialize());
 
+// Use morgan for logging
 app.use(morgan('dev'));
 
+//add routes from the api
 const apiRoutes = require('./app/routes/api');
 app.use('/api', apiRoutes);
 
+//TODO: switch to serve the frontend
 app.get('/', function (req, res) {
     res.send('Hello! The API is at http://localhost:' + port + '/api');
 });
-
+//listen on the specified port
 app.listen(port, () => {
     console.log('Server listening at http://localhost:' + port);
 });

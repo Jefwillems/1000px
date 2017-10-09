@@ -16,6 +16,7 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router) {
     this.loading = false;
+    auth.getUsers();
   }
 
   ngOnInit() {

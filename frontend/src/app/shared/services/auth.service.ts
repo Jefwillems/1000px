@@ -33,4 +33,10 @@ export class AuthService {
       });
   }
 
+  public getUsers() {
+    this.http.get(this.url + '/api/users/all').map((response: Response) => {
+      const obj = response.json();
+      console.log(obj);
+    });
+  }
 }
