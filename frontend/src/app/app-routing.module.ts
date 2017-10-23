@@ -4,8 +4,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const appRoutes: Routes = [
-    { path: 'login', component: LoginComponent },
-    { path: 'signup', component: SignupComponent },
     { path: '**', redirectTo: '/' }
 ];
 

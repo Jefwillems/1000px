@@ -13,4 +13,7 @@ api.use('/users', userRoutes);
 const authenticationRoutes = require('./authenticate');
 api.use('/auth', authenticationRoutes);
 
+const imgRoutes = require('./images');
+api.use('/img', imgRoutes);
+
 module.exports = api;

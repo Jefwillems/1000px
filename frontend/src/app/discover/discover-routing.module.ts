@@ -7,10 +7,14 @@ import { RouterModule, Routes } from '@angular/router';
 
 
 const appRoutes: Routes = [
-    { path: 'discover/editors', component: EditorsComponent },
-    { path: 'discover/popular', component: PopularComponent },
-    { path: 'discover/fresh', component: FreshComponent },
-    { path: 'discover', redirectTo: '/discover/editors' }
+    {
+        path: 'discover', children: [
+            { path: '', redirectTo: 'editors', pathMatch: 'full' },
+            { path: 'editors', component: EditorsComponent },
+            { path: 'popular', component: PopularComponent },
+            { path: 'fresh', component: FreshComponent },
+        ]
+    }
 ];
 
 @NgModule({

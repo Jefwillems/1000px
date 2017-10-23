@@ -27,7 +27,7 @@ app.use(cors(corsOptions));
 
 // get info from POST and/or URL parameters
 app.use(bodyParser.urlencoded({
-    extended: false //Don't switch between querystring and qs library
+    extended: true
 }));
 app.use(bodyParser.json());
 
@@ -45,6 +45,9 @@ app.use('/api', apiRoutes);
 app.get('/', function (req, res) {
     res.send('Hello! The API is at http://localhost:' + port + '/api');
 });
+
+app.use('/file', express.static('public'));
+
 //listen on the specified port
 app.listen(port, () => {
     console.log('Server listening at http://localhost:' + port);

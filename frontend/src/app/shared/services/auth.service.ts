@@ -8,12 +8,12 @@ import 'rxjs/add/operator/map';
 export class AuthService {
 
   private url = 'http://localhost:3000';
+  private token: string;
 
   constructor(private http: Http,
-    private storageManager: StorageManagerService) { }
-
-  public isAuthenticated(): Boolean {
-    return true;
+    private storageManager: StorageManagerService) {
+    const current = this.storageManager.retrieveObject('currentUser');
+    this.token = current && current.token;
   }
 
   public logout() {
@@ -22,13 +22,17 @@ export class AuthService {
   }
 
   public login(username: string, password: string) {
-    return this.http.post(this.url + '/api/auth/login', JSON.stringify({ username: username, password: password }))
+    return this.http.post(this.url + '/api/auth/login', { username: username, password: password })
       .map((response: Response) => {
+        console.log(response);
         // login successful if there's a jwt token in the response
-        const user = response.json();
-        if (user && user.token) {
+        const token = response.json() && response.json().token;
+        if (token) {
+          this.token = token;
           // store user details and jwt token in local storage to keep user logged in between page refreshes
-          this.storageManager.store('currentUser', JSON.stringify(user));
+          this.storageManager.store('currentUser', JSON.stringify({ username: response.json().user.username, token: token }));
+        } else {
+          this.logout();
         }
       });
   }
@@ -38,5 +42,13 @@ export class AuthService {
       const obj = response.json();
       console.log(obj);
     });
+  }
+
+  public isAuthenticated(): boolean {
+    const user = this.storageManager.retrieveObject('currentUser');
+    return user && user.token;
+  }
+  public cheat() {
+    this.storageManager.store('currentUser', { token: 'sdkufhsdkfhj' });
   }
 }

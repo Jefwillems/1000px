@@ -7,8 +7,10 @@ const jwt = require('jsonwebtoken');
 
 // /api/auth/login
 authRoutes.post('/login', (req, res) => {
+    console.log(req.body);
+    console.log(req.body.username, req.body.password);
     User.findOne({
-        name: req.body.username
+        username: req.body.username
     }, (error, user) => {
         if (error) throw error;
 
@@ -18,14 +20,15 @@ authRoutes.post('/login', (req, res) => {
                 message: 'Authentication failed. User not found.'
             });
         } else if (user) {
-            user.comparePassword(req.body.password, (error, ok) => {
-                if (isMatch && !err) {
+            user.comparePassword(req.body.password, (error, isMatch) => {
+                if (isMatch && !error) {
                     // if user is found and password is right create a token
-                    var token = jwt.sign(user, config.secret);
+                    var token = jwt.sign(user.toObject(), dbconfig.secret);
                     // return the information including token as JSON
                     res.json({
                         success: true,
-                        token: 'JWT ' + token
+                        token: 'JWT ' + token,
+                        user: user
                     });
                 } else {
                     res.status(401).send({
@@ -61,7 +64,7 @@ authRoutes.post('/signup', (req, res) => {
             if (err) {
                 return res.json({
                     success: false,
-                    msg: JSON.stringify(err)
+                    msg: err
                 });
             }
             res.json({

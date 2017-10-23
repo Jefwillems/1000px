@@ -17,12 +17,12 @@
       <a [routerLink]="['/blog']">
         <li>Blog</li>
       </a>
-    </div>
-    <div *ngIf='isLoggedIn'>
+    </div>  
+    <div *ngIf="isAuthenticated()">
       <a [routerLink]="['/account']">
         <li>Account</li>
       </a>
     </div>
-
+    <app-login *ngIf="!isAuthenticated()"></app-login>
   </ul>
 </nav>

@@ -8,13 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavigationComponent implements OnInit {
 
-  private isLoggedIn: Boolean;
-
-  constructor(private auth: AuthService) {
-    this.isLoggedIn = this.auth.isAuthenticated();
-  }
+  constructor(private auth: AuthService) { }
 
   ngOnInit() {
+  }
+
+  isAuthenticated() {
+    return this.auth.isAuthenticated();
   }
 
 }

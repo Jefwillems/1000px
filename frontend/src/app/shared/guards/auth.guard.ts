@@ -13,7 +13,7 @@ export class AuthGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    if (this.storageManager.retrieveObject('currentUser')) {
+    if (this.storageManager.retrieveObject('currentUser') || this.storageManager.retrieveObject('isAuthenticated')) {
       return true;
     }
 

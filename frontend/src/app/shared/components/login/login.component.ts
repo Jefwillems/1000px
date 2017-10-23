@@ -1,6 +1,7 @@
 import { AuthService } from './../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -27,12 +28,17 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.loading = true;
-    /*this.auth.login(this.model.username, this.model.password)
-      .subscribe(data => {
-        this.router.navigate([this.returnUrl]);
-      },
-      error => {
-        this.loading = false;
-      });*/
+    const username = (<HTMLInputElement>document.getElementById('username')).value;
+    const password = (<HTMLInputElement>document.getElementById('password')).value;
+    console.log('loggin in');
+    console.log(username, password);
+    this.auth.login(username, password)
+       .subscribe(data => {
+         console.log(data);
+         this.router.navigate([this.returnUrl]);
+       },
+       error => {
+         this.loading = false;
+       });
   }
 }

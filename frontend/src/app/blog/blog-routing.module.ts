@@ -1,11 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
-import { RecentComponent } from './recent/recent.component';
-
+import { BlogComponent } from './blog.component';
+import { BlogDetailComponent } from './blog-detail/blog-detail.component';
 
 const appRoutes: Routes = [
-    { path: 'blog', component: RecentComponent }
+    {
+        path: 'blog', children: [
+            { path: '', component: BlogComponent },
+            { path: 'detail', component: BlogDetailComponent }
+        ]
+    }
 ];
 
 @NgModule({

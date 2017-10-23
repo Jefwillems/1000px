@@ -1,7 +1,4 @@
 import { Http, HttpModule } from '@angular/http';
-import { SharedModule } from './shared/shared.module';
-import { SignupComponent } from './shared/components/signup/signup.component';
-import { LoginComponent } from './shared/components/login/login.component';
 import { AuthService } from './shared/services/auth.service';
 import { ProfileModule } from './profile/profile.module';
 import { DiscoverModule } from './discover/discover.module';
@@ -15,23 +12,27 @@ import { AppRoutingModule } from './app-routing.module';
 import { HomeModule } from './home/home.module';
 
 import { NavigationComponent } from './navigation/navigation.component';
+import { LoginComponent } from './shared/components/login/login.component';
+import { StorageManagerService } from './shared/services/storage-manager.service';
+import { BlogService } from './shared/services/blog.service';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     NavigationComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
+    HttpModule,
     HomeModule,
     BlogModule,
     DiscoverModule,
     ProfileModule,
-    SharedModule,
     AppRoutingModule
   ],
-  providers: [AuthService],
+  providers: [AuthService, StorageManagerService, BlogService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
