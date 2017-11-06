@@ -3,13 +3,12 @@ const app = express();
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 const passport = require('passport');
 const databaseConfig = require('./config/database'); // get our config file
 
 const cors = require('cors');
 
-const port = process.env.PORT || 3000; // used to create, sign, and verify tokens
+const port = process.env.PORT || 3000;
 
 mongoose.connect(databaseConfig.database, {
     useMongoClient: true
@@ -46,7 +45,7 @@ app.get('/', function (req, res) {
     res.send('Hello! The API is at http://localhost:' + port + '/api');
 });
 
-app.use('/file', express.static('public'));
+app.use('/file', express.static('app/public'));
 
 //listen on the specified port
 app.listen(port, () => {

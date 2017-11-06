@@ -69,9 +69,10 @@ authRoutes.post('/signup', (req, res) => {
             }
             res.json({
                 success: true,
-                msg: 'Successful created new user.'
+                msg: 'Successfully created new user.',
+                user: newUser
             });
         });
     }
-})
+});
 module.exports = authRoutes;
