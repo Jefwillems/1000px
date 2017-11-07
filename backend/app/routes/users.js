@@ -3,7 +3,6 @@ const routes = express.Router();
 const User = require('../models/user'); // get our mongoose model
 const passport = require('passport');
 const dbconfig = require('../../config/database');
-const jwt = require('jsonwebtoken');
 
 // <link>/api/users/
 routes.get('/', (req, res) => {

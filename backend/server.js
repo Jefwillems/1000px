@@ -30,8 +30,10 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+
 //Use passport for authentication
 app.use(passport.initialize());
+require('./config/passport')(passport);
 
 // Use morgan for logging
 app.use(morgan('dev'));

@@ -1,7 +1,7 @@
 {
   "name": "backend1000px",
   "version": "1.0.0",
-  "description": "",
+  "description": "backend for a picture sharing website",
   "main": "index.js",
   "scripts": {
     "start": "node ./server.js",
@@ -29,17 +29,11 @@
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
     "express": "^4.15.5",
-    "jsonwebtoken": "^8.0.1",
-    "mongodb": "^2.2.31",
+    "jwt-simple": "^0.3.1",
     "mongoose": "^4.11.13",
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
-    "passport-facebook": "^2.1.1",
-    "passport-github2": "^0.1.11",
-    "passport-google-oauth": "^1.0.0",
-    "passport-jwt": "^3.0.0",
-    "passport-local": "^1.0.0",
-    "passport-twitter": "^1.0.4",
+    "passport-jwt": "^1.2.1",
     "serve-favicon": "^2.4.5"
   },
   "devDependencies": {

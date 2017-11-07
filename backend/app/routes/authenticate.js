@@ -3,43 +3,89 @@ const authRoutes = express.Router();
 const User = require('../models/user'); // get our mongoose model
 const passport = require('passport');
 const dbconfig = require('../../config/database');
-const jwt = require('jsonwebtoken');
+const jwt = require('jwt-simple');
 
 // /api/auth/login
-authRoutes.post('/login', (req, res) => {
-    console.log(req.body);
-    console.log(req.body.username, req.body.password);
+authRoutes.post('/login', (req, res, next) => {
     User.findOne({
         username: req.body.username
-    }, (error, user) => {
-        if (error) throw error;
-
-        if (!user) {
-            res.json({
+    }, function (err, user) {
+        if (err) {
+            return res.json({
                 success: false,
-                message: 'Authentication failed. User not found.'
-            });
-        } else if (user) {
-            user.comparePassword(req.body.password, (error, isMatch) => {
-                if (isMatch && !error) {
-                    // if user is found and password is right create a token
-                    var token = jwt.sign(user.toObject(), dbconfig.secret);
-                    // return the information including token as JSON
-                    res.json({
-                        success: true,
-                        token: 'JWT ' + token,
-                        user: user
-                    });
-                } else {
-                    res.status(401).send({
-                        success: false,
-                        msg: 'Authentication failed. Wrong password.'
-                    });
-                }
+                msg: 'Authentication failed. User not found.'
             });
         }
+        if (!user) {
+            return res.json({
+                success: false,
+                msg: 'Authentication failed. User not found.'
+            });
+        }
+        user.comparePassword(req.body.password, function (err, isMatch) {
+            if (isMatch && !err) {
+                // if user is found and password is right create a token
+                const token = jwt.encode(user, dbconfig.secret);
+                // return the information including token as JSON
+                res.json({
+                    success: true,
+                    token: 'JWT ' + token
+                });
+            } else {
+                res.send({
+                    success: false,
+                    msg: 'Authentication failed. Wrong password.'
+                });
+            }
+        })
     });
 });
+
+
+authRoutes.get('/protected', passport.authenticate('jwt', {
+    session: false
+}), (req, res) => {
+    const token = getToken(req.headers);
+    if (token) {
+        const decoded = jwt.decode(token, dbconfig.secret);
+        User.findOne({
+            username: decoded.username
+        }, function (err, user) {
+            if (err) {
+                throw err;
+            }
+            if (!user) {
+                return res.status(403).json({
+                    success: false,
+                    msg: 'Authentication failed. User not found.'
+                });
+            } else {
+                res.json({
+                    success: true,
+                    msg: 'Welcome in the member area ' + user.username + '!'
+                });
+            }
+        })
+    } else {
+        return res.status(403).send({
+            success: false,
+            msg: 'No token provided.'
+        });
+    }
+});
+
+function getToken(headers) {
+    if (headers && headers.authorization) {
+        let parted = headers.authorization.split(' ');
+        if (parted.length === 2) {
+            return parted[1];
+        } else {
+            return null;
+        }
+    } else {
+        return null;
+    }
+};
 
 //route to sign up a user at <link>/api/users/signup
 authRoutes.post('/signup', (req, res) => {
@@ -74,5 +120,6 @@ authRoutes.post('/signup', (req, res) => {
             });
         });
     }
+
 });
 module.exports = authRoutes;
