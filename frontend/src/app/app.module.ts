@@ -12,7 +12,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { HomeModule } from './home/home.module';
 
 import { NavigationComponent } from './navigation/navigation.component';
-import { LoginComponent } from './shared/components/login/login.component';
 import { StorageManagerService } from './shared/services/storage-manager.service';
 import { BlogService } from './shared/services/blog.service';
 
@@ -21,7 +20,6 @@ import { BlogService } from './shared/services/blog.service';
   declarations: [
     AppComponent,
     NavigationComponent,
-    LoginComponent
   ],
   imports: [
     BrowserModule,

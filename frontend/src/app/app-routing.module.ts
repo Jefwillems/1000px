@@ -1,5 +1,3 @@
-import { SignupComponent } from './shared/components/signup/signup.component';
-import { LoginComponent } from './shared/components/login/login.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
