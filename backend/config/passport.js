@@ -1,11 +1,10 @@
 const JwtStrategy = require('passport-jwt').Strategy;
 
 const User = require('../app/models/user');
-const config = require('./database');
 
 module.exports = function (passport) {
     let opts = {};
-    opts.secretOrKey = config.secret;
+    opts.secretOrKey = process.env.PX1000_SECRET;
     passport.use(new JwtStrategy(opts, function (jwt_payload, done) {
         User.findOne({
             username: jwt_payload.username

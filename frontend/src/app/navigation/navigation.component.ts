@@ -8,6 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavigationComponent implements OnInit {
 
+  /**
+   * Creates an instance of NavigationComponent.
+   * @param {AuthService} auth
+   * @memberof NavigationComponent
+   */
   constructor(private auth: AuthService) { }
 
   ngOnInit() {

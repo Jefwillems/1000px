@@ -13,7 +13,6 @@ const port = process.env.PORT || 3000;
 mongoose.connect(databaseConfig.database, {
     useMongoClient: true
 }); // connect to database
-app.set('superSecret', databaseConfig.secret); // secret variable
 
 //cors configuration //CROSS-DOMAIN errors
 const corsOptions = {
@@ -50,6 +49,7 @@ app.get('/', function (req, res) {
 app.use('/file', express.static('app/public'));
 
 //listen on the specified port
+
 app.listen(port, () => {
     console.log('Server listening at http://localhost:' + port);
 });

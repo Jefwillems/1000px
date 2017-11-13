@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./server.js",
-    "test": "nodemon ./server.js --config ./nodemon.json localhost 3000",
+    "test": "source ./app-env.sh && nodemon ./server.js --config ./nodemon.json localhost 3000",
     "help": "nodemon -h"
   },
   "repository": {
