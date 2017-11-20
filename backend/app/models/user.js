@@ -1,16 +1,13 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const bcrypt = require('bcryptjs');
+let crypto = require('crypto');
+let jwt = require('jsonwebtoken');
 
 // set up a mongoose model and pass it using module.exports
 const UserSchema = new Schema({
     username: {
         type: String,
         unique: true,
-        required: true
-    },
-    password: {
-        type: String,
         required: true
     },
     email: {
@@ -21,36 +18,30 @@ const UserSchema = new Schema({
     admin: {
         type: Boolean,
         default: false
-    }
+    },
+    hash: String,
+    salt: String
 });
 
-UserSchema.pre('save', function (next) {
-    const user = this;
-    if (this.isModified('password') || this.isNew) {
-        bcrypt.genSalt(10, function (err, salt) {
-            if (err) {
-                return next(err);
-            }
-            bcrypt.hash(user.password, salt, null, function (err, hash) {
-                if (err) {
-                    return next(err);
-                }
-                user.password = hash;
-                next();
-            });
-        });
-    } else {
-        return next();
-    }
-});
-
-UserSchema.methods.comparePassword = function (passw, cb) {
-    bcrypt.compare(passw, this.password, function (err, isMatch) {
-        if (err) {
-            return cb(err);
-        }
-        cb(null, isMatch);
-    });
+UserSchema.methods.setPassword = function (password) {
+    this.salt = crypto.randomBytes(32).toString('hex');
+    this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 64, 'sha512').toString('hex');
 };
 
-module.exports = mongoose.model('User', UserSchema);
+UserSchema.methods.validPassword = function (password) {
+    var hash = crypto.pbkdf2Sync(password, this.salt, 10000, 64, 'sha512').toString('hex');
+    return this.hash === hash;
+};
+
+UserSchema.methods.generateJWT = function () {
+    var today = new Date();
+    var exp = new Date(today);
+    exp.setDate(today.getDate() + 60);
+    return jwt.sign({
+        _id: this._id,
+        username: this.username,
+        exp: parseInt(exp.getTime() / 1000),
+    }, process.env.RECIPE_BACKEND_SECRET);
+};
+
+mongoose.model('User', UserSchema);

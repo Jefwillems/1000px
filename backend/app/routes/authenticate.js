@@ -2,7 +2,6 @@ const express = require('express');
 const authRoutes = express.Router();
 const User = require('../models/user'); // get our mongoose model
 const passport = require('passport');
-const dbconfig = require('../../config/database');
 const jwt = require('jwt-simple');
 
 // /api/auth/login
@@ -47,7 +46,7 @@ authRoutes.get('/protected', passport.authenticate('jwt', {
 }), (req, res) => {
     const token = getToken(req.headers);
     if (token) {
-        const decoded = jwt.decode(token, dbconfig.secret);
+        const decoded = jwt.decode(token, process.env.PX1000_SECRET);
         User.findOne({
             username: decoded.username
         }, function (err, user) {

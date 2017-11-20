@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/fresh', (req, res) => {
     //TODO GET FILEPATHS FROM DATABASE INSTEAD OF READING DIRECTORY
-    fs.readdir(process.env.PWD + '/public/img/', (err, files) => {
+    fs.readdir(process.env.PWD + '/app/public/img/', (err, files) => {
         if (err) {
             res.json({
                 error: err
