@@ -1,0 +1,37 @@
+$link-active-color:#0099e5;
+$link-color:#71767a;
+$border-accent-color:#eeeff2;
+nav {
+  width: 100vw;
+  border-bottom: 1px solid $border-accent-color;
+  height: 50px;
+  .page-nav-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+    justify-content: center;
+    div {
+      display: flex;
+      justify-content: center;
+      align-content: center;
+      a {
+        color: $link-color;
+        text-decoration: none;
+        padding: 15px 25px;
+        text-transform: uppercase;
+        font-weight: 500;
+        &:visited {
+          color: inherit;
+        }
+        &.active-link {
+          color: $link-active-color;
+          border-bottom: 2px solid $link-active-color;
+        }
+        &:hover {
+          color: $link-active-color;
+        }
+      }
+    }
+  }
+}
