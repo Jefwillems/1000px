@@ -39,8 +39,7 @@ authRoutes.post('/checkusername', (req, res, next) => {
             })
         }
     });
-})
-
+});
 
 //route to sign up a user at <link>/api/users/signup
 authRoutes.post('/signup', (req, res, next) => {

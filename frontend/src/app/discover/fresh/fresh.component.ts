@@ -14,6 +14,10 @@ export class FreshComponent implements OnInit {
   constructor(private imageService: ImageService) {
     this.imageService.fetchFresh().subscribe(images => {
       this._images = images;
+      images.forEach(element => {
+        console.log(element);
+
+      });
     });
   }
 

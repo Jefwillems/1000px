@@ -19,6 +19,10 @@ const UserSchema = new Schema({
         type: Boolean,
         default: false
     },
+    likes: {
+        type: [Schema.Types.ObjectId],
+        ref: 'Pictures'
+    },
     hash: String,
     salt: String
 });

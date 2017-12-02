@@ -6,7 +6,7 @@ import { PopularComponent } from './popular/popular.component';
 import { FreshComponent } from './fresh/fresh.component';
 import { DiscoverNavComponent } from './discover-nav/discover-nav.component';
 import { ImageService } from '../shared/services/image.service';
-import { ImageComponent } from './image-component/image.component';
+import { ImageComponent } from './image/image.component';
 
 @NgModule({
   imports: [

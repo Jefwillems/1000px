@@ -1,5 +1,5 @@
 import { Http, HttpModule } from '@angular/http';
-import { AuthService } from './shared/services/auth.service';
+
 import { ProfileModule } from './profile/profile.module';
 import { DiscoverModule } from './discover/discover.module';
 import { BlogModule } from './blog/blog.module';
@@ -12,8 +12,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { HomeModule } from './home/home.module';
 
 import { NavigationComponent } from './navigation/navigation.component';
-import { StorageManagerService } from './shared/services/storage-manager.service';
+
 import { BlogService } from './shared/services/blog.service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { StorageManagerService } from './shared/services/storage-manager.service';
+import { AuthService } from './shared/services/auth.service';
 
 
 @NgModule({
@@ -24,13 +27,14 @@ import { BlogService } from './shared/services/blog.service';
   imports: [
     BrowserModule,
     HttpModule,
+    ReactiveFormsModule,
     HomeModule,
     BlogModule,
     DiscoverModule,
     ProfileModule,
     AppRoutingModule
   ],
-  providers: [AuthService, StorageManagerService, BlogService],
+  providers: [StorageManagerService, BlogService, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

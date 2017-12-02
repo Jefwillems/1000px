@@ -24,6 +24,8 @@ mongoose.connect(process.env.PX1000_DB, {
 });
 
 require('./app/models/user');
+require('./app/models/picture');
+require('./app/models/blogpost');
 
 require('./config/passport');
 

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Image } from '../../shared/models/image.model';
 
 @Component({
   selector: 'app-image',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ImageComponent implements OnInit {
 
+  @Input() public image: Image;
+  public url: String;
   constructor() { }
 
   ngOnInit() {
+    this.url = this.image.pathToPicture;
   }
 
 }

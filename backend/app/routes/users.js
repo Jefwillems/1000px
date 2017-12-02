@@ -15,7 +15,7 @@ routes.get('/', (req, res) => {
     });
 });
 
-routes.get('/get/:id', (req, response) => {
+routes.get('/get/:id', auth, (req, response) => {
     let id = req.params['id'];
     User.find({
         _id: id
@@ -42,7 +42,6 @@ routes.get('/all', auth, (req, res) => {
         res.json(users);
     });
 });
-
 
 
 module.exports = routes;
