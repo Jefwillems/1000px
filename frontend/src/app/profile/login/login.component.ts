@@ -12,7 +12,8 @@ export class LoginComponent implements OnInit {
   public user: FormGroup;
   public errorMsg: string;
 
-  constructor(private auth: AuthService,
+  constructor(
+    private auth: AuthService,
     private router: Router,
     private fb: FormBuilder) { }
 

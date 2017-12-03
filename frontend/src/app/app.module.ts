@@ -17,12 +17,14 @@ import { BlogService } from './shared/services/blog.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { StorageManagerService } from './shared/services/storage-manager.service';
 import { AuthService } from './shared/services/auth.service';
+import { UploadComponent } from './upload/upload.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     NavigationComponent,
+    UploadComponent,
   ],
   imports: [
     BrowserModule,

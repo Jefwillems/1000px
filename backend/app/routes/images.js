@@ -77,6 +77,7 @@ router.post('like/:imageID', auth, (req, res) => {
     });
 });
 
+// /api/img/add
 router.post('/add', auth, upload.single('picture'), (req, res, next) => {
     if (!req.file) {
         res.status('500').json({
