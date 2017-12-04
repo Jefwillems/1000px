@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const mime = require('mime');
 let mongoose = require('mongoose');
 const Picture = mongoose.model('Picture');
+const User = mongoose.model('User');
 
 let jwt = require('express-jwt');
 let auth = jwt({
@@ -64,7 +65,8 @@ router.get('/picks', (req, res) => {
     })
 });
 
-router.post('like/:imageID', auth, (req, res) => {
+router.post('/like/:imageID', auth, (req, res) => {
+
     Picture.findById(req.params.imageID, (err, pic) => {
         if (err) {
             res.status(400).json({
@@ -72,8 +74,34 @@ router.post('like/:imageID', auth, (req, res) => {
                 err: err
             })
         }
-        //TODO: add user to like in picture, add picture to likes in user
-        return res.json(pic);
+        const currentUser_id = req.payload._id;
+        User.findById(currentUser_id, (err, user) => {
+            if (err) {
+                res.status(500).json({
+                    msg: 'An Error occured',
+                    err: err
+                });
+            }
+            user.likes.push(pic);
+            pic.likes += 1;
+            user.save((err) => {
+                if (err) {
+                    res.status(500).json({
+                        msg: 'An Error occured',
+                        err: err
+                    });
+                }
+                pic.save((err) => {
+                    if (err) {
+                        res.status(500).json({
+                            msg: 'An Error occured',
+                            err: err
+                        });
+                    }
+                    return res.json(pic);
+                })
+            })
+        });
     });
 });
 
@@ -92,16 +120,29 @@ router.post('/add', auth, upload.single('picture'), (req, res, next) => {
         let pic = new Picture();
         pic.title = req.body.title;
         pic.pathToPicture = req.file.path;
-        pic.author = req.payload._id;
-        pic.save((err) => {
-            if (err) {
-                res.status(500).json({
-                    msg: 'An Error occured',
+        const currentUser_id = req.payload._id;
+        //TODO: pic author, user.pictures
+        pic.author = currentUser_id;
+        pic.save(err => {
+            if (err) res.status(500).json({
+                err: err
+            });
+            User.findById(currentUser_id, (err, user) => {
+                if (err) res.status(500).json({
                     err: err
+                });
+                console.log(user);
+                console.log(pic);
+                user.pictures.push(pic);
+                user.save(err => {
+                    if (err) res.status(500).json({
+                        err: err
+                    });
+                    res.json(pic);
                 })
-            }
-            res.json(pic);
-        })
+            });
+
+        });
     }
 });
 

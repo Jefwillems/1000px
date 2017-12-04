@@ -7,7 +7,7 @@ import { BlogDetailComponent } from './blog-detail/blog-detail.component';
 @NgModule({
   imports: [
     CommonModule,
-    BlogRoutingModule
+    BlogRoutingModule,
   ],
   declarations: [BlogComponent, BlogDetailComponent]
 })

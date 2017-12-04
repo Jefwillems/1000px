@@ -15,6 +15,32 @@ routes.get('/', (req, res) => {
     });
 });
 
+routes.get('/profile', auth, (req, res) => {
+    const currentUser_id = req.payload._id;
+    User.findOne({
+            _id: currentUser_id
+        })
+        .populate({
+            path: 'likes',
+            model: 'Picture'
+        })
+        .populate({
+            path: 'pictures',
+            model: 'Picture'
+        })
+        .exec((error, user) => {
+            let images = user.pictures;
+            for (let i = 0; i < images.length; i++) {
+                images[i].pathToPicture = images[i].pathToPicture.replace("app/public", "/file");
+            }
+            if (error) {
+                res.status(500).json(error);
+            } else {
+                res.json(user);
+            }
+        });
+});
+
 routes.get('/get/:id', auth, (req, response) => {
     let id = req.params['id'];
     User.find({

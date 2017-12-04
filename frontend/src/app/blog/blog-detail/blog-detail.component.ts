@@ -7,9 +7,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BlogDetailComponent implements OnInit {
 
+  public text: String;
+
   constructor() { }
 
   ngOnInit() {
+    this.text = `## Hello world
+
+    * this is a test`;
   }
 
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ImageService } from '../shared/services/image.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-upload',
@@ -15,7 +16,8 @@ export class UploadComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private is: ImageService) { }
+    private is: ImageService,
+    private router: Router) { }
 
   ngOnInit() {
     this.upload = this.fb.group({
@@ -42,7 +44,14 @@ export class UploadComponent implements OnInit {
     const title = this.upload.value.title;
     const file = $event.target[0].files[0];
     this.is.upload(title, file).subscribe(res => {
-      console.log(res);
+      if (res.pathToPicture && res.id) {
+        console.log('to profile');
+        this.router.navigate(['/profile']);
+      } else {
+        console.log('to upload');
+        console.log(res);
+        this.router.navigate(['/upload']);
+      }
     });
   }
 

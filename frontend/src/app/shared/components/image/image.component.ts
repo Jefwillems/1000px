@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Image } from '../../shared/models/image.model';
+import { Image } from '../../models/image.model';
 
 @Component({
   selector: 'app-image',
@@ -10,10 +10,16 @@ export class ImageComponent implements OnInit {
 
   @Input() public image: Image;
   public url: String;
+  public urlToPic: String;
   constructor() { }
 
   ngOnInit() {
     this.url = this.image.pathToPicture;
+    this.urlToPic = '/picture/' + this.image.id;
+  }
+
+  get liked(): boolean {
+    return false;
   }
 
 }

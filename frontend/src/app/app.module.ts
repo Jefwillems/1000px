@@ -18,13 +18,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { StorageManagerService } from './shared/services/storage-manager.service';
 import { AuthService } from './shared/services/auth.service';
 import { UploadComponent } from './upload/upload.component';
-
+import { UserService } from './shared/services/user.service';
+import { PictureComponent } from './picture/picture.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavigationComponent,
     UploadComponent,
+    PictureComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,7 +38,7 @@ import { UploadComponent } from './upload/upload.component';
     ProfileModule,
     AppRoutingModule
   ],
-  providers: [StorageManagerService, BlogService, AuthService],
+  providers: [StorageManagerService, BlogService, AuthService, UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

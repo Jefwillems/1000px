@@ -3,11 +3,12 @@ import 'rxjs/add/operator/map';
 import { Http } from '@angular/http';
 import { StorageManagerService } from './storage-manager.service';
 import { Injectable } from '@angular/core';
+import { Headers } from '@angular/http';
 
 @Injectable()
 export class AuthService {
 
-  private url = '/api/auth';
+  private url = '/api/';
   private _user$: BehaviorSubject<string>;
   public redirectUrl: string;
 
@@ -20,11 +21,13 @@ export class AuthService {
   get user$(): BehaviorSubject<string> {
     return this._user$;
   }
+
   get token() {
     return this.storageManager.retrieveObject('currentUser').token;
   }
+
   login(username: string, password: string): Observable<boolean> {
-    return this.http.post(this.url + '/login', { username: username, password: password })
+    return this.http.post(this.url + 'auth/login', { username: username, password: password })
       .map(res => res.json()).map(res => {
         const token = res.token;
         if (token) {
@@ -43,4 +46,6 @@ export class AuthService {
       setTimeout(() => this._user$.next(null));
     }
   }
+
+ 
 }

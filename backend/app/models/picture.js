@@ -37,8 +37,8 @@ const PictureSchema = new Schema({
         default: Date.now
     },
     likes: {
-        type: [Schema.Types.ObjectId],
-        ref: 'Users'
+        type: Number,
+        default: 0
     },
     flagged: {
         type: Boolean,

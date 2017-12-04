@@ -4,6 +4,9 @@ import { Image } from '../models/image.model';
 import { Http } from '@angular/http';
 import { AuthService } from './auth.service';
 import { Headers } from '@angular/http';
+import 'rxjs/add/operator/map';
+
+const fromJSON = (img) => Image.fromJSON(img);
 
 @Injectable()
 export class ImageService {
@@ -14,20 +17,18 @@ export class ImageService {
 
   fetchFresh(): Observable<Image[]> {
     return this.http.get(this._url + 'fresh').map(response => {
-      console.log(response.json());
-      return response.json();
+      return response.json().map(fromJSON);
     });
   }
 
   fetchPicked(): Observable<Image[]> {
     return this.http.get(this._url + 'picks').map(response => {
-      console.log(response.json());
-      return response.json();
+      return response.json().map(fromJSON);
     });
   }
 
   fetchImage(id: String): Observable<Image> {
-    return this.http.get(this._url + id).map(response => response.json());
+    return this.http.get(this._url + id).map(response => response.json().map(fromJSON));
   }
 
   upload(title: string, file: File): Observable<Image> {
@@ -39,6 +40,8 @@ export class ImageService {
       `${this._url}add`,
       formData,
       { headers: new Headers({ Authorization: `Bearer ${this.auth.token}` }) }
-    ).map(res => res.json());
+    ).map(res => res.json()).map(fromJSON);
   }
+
+ 
 }

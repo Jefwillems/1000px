@@ -14,9 +14,6 @@ export class EditorsComponent implements OnInit {
   constructor(private is: ImageService) {
     this.is.fetchPicked().subscribe(images => {
       this._images = images;
-      images.forEach(element => {
-        console.log(element);
-      });
     });
   }
 

@@ -6,14 +6,15 @@ import { PopularComponent } from './popular/popular.component';
 import { FreshComponent } from './fresh/fresh.component';
 import { DiscoverNavComponent } from './discover-nav/discover-nav.component';
 import { ImageService } from '../shared/services/image.service';
-import { ImageComponent } from './image/image.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    DiscoverRoutingModule
+    DiscoverRoutingModule,
+    SharedModule
   ],
-  declarations: [EditorsComponent, PopularComponent, FreshComponent, DiscoverNavComponent, ImageComponent],
+  declarations: [EditorsComponent, PopularComponent, FreshComponent, DiscoverNavComponent],
   providers: [ImageService]
 })
 export class DiscoverModule { }
