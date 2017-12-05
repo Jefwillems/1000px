@@ -22,7 +22,10 @@ export class UploadComponent implements OnInit {
   ngOnInit() {
     this.upload = this.fb.group({
       title: ['', Validators.required],
-      file: ['', Validators.required]
+      file: ['', Validators.required],
+      description: ['', Validators.maxLength(128)],
+      camera: ['', Validators.maxLength(20)],
+      lens: ['', Validators.maxLength(30)]
     });
   }
 
@@ -43,7 +46,10 @@ export class UploadComponent implements OnInit {
   submit($event) {
     const title = this.upload.value.title;
     const file = $event.target[0].files[0];
-    this.is.upload(title, file).subscribe(res => {
+    const description = this.upload.value.description;
+    const camera = this.upload.value.camera;
+    const lens = this.upload.value.lens;
+    this.is.upload(title, file, description, camera, lens).subscribe(res => {
       if (res.pathToPicture && res.id) {
         console.log('to profile');
         this.router.navigate(['/profile']);

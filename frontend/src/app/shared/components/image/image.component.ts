@@ -11,11 +11,13 @@ export class ImageComponent implements OnInit {
   @Input() public image: Image;
   public url: String;
   public urlToPic: String;
+
+
   constructor() { }
 
   ngOnInit() {
     this.url = this.image.pathToPicture;
-    this.urlToPic = '/picture/' + this.image.id;
+    this.urlToPic = '/p/' + this.image.id;
   }
 
   get liked(): boolean {

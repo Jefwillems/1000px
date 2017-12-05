@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Image } from '../../shared/models/image.model';
 import { UserService } from '../../shared/services/user.service';
+import 'rxjs/add/operator/map';
 
 @Component({
   selector: 'app-profile',
@@ -14,7 +15,7 @@ export class ProfileComponent implements OnInit {
 
   constructor(private us: UserService) {
     this.us.fetchProfile().subscribe(profile => {
-      this._images = profile.pictures;
+      this._images = profile.pictures.map(pic => Image.fromJSON(pic));
       this._name = profile.username;
     });
   }

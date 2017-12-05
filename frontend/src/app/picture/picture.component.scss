@@ -1,0 +1,114 @@
+.page {
+  padding: 15px;
+  .container {
+    display: flex;
+    flex-direction: row;
+    .left {
+      width: 75%;
+      img {
+        max-height: 90vh;
+        max-width: 100%;
+      }
+    }
+    .right {
+      width: 25%;
+      border: solid 1px #eeeff2;
+      .header {
+        display: block;
+        padding: 2rem;
+        border-bottom: solid 1px #eeeff2;
+        .avatar {}
+        .author {
+          a {
+            text-decoration: none;
+            font-family: 'Maven Pro', sans-serif;
+            line-height: 1.5em;
+            font-size: 18px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            color: #2c3e50;
+            transition-property: color;
+            transition-duration: 0.3s;
+            transition-timing-function: linear;
+            font-weight: 400;
+            &:hover {
+              color: #009ee3;
+            }
+            &:visited {
+              color: #2c3e50;
+            }
+          }
+        }
+      }
+      .buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: 2rem;
+        border-bottom: solid 1px #eeeff2;
+        .like {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          font-family: 'Maven Pro', sans-serif;
+          line-height: 1.5em;
+          font-size: 16px;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          color: #2c3e50;
+          padding: 10px 30px;
+          width: 30%;
+          position: relative;
+          box-shadow: 0 0 1px transparent;
+          background: #ff4c4c;
+          transition-property: color;
+          transition-duration: 1s;
+          overflow: hidden;
+          transform: perspective(1px) translateZ(0);
+          i {
+            margin-right: 10px;
+          }
+          &::before {
+            content: '';
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #e1e1e1;
+            border-radius: 100%;
+            transform: scale(2);
+            transition-property: transform;
+            transition-duration: 0.3s;
+            transition-timing-function: ease-out;
+          }
+          &:hover,
+          &:focus,
+          &:active,
+          &.liked {
+            outline: none;
+            &:before {
+              transform: scale(0);
+            }
+          }
+          &:hover,
+          &.liked {
+            border-color: #ff3333;
+            color: white;
+          }
+        }
+      }
+      .info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+        h4 {
+          margin: 0;
+          padding: 0;
+        }
+      }
+    }
+  }
+}

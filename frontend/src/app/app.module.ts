@@ -20,6 +20,7 @@ import { AuthService } from './shared/services/auth.service';
 import { UploadComponent } from './upload/upload.component';
 import { UserService } from './shared/services/user.service';
 import { PictureComponent } from './picture/picture.component';
+import { PictureResolver } from './picture/picture-resolver.service';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,7 @@ import { PictureComponent } from './picture/picture.component';
     ProfileModule,
     AppRoutingModule
   ],
-  providers: [StorageManagerService, BlogService, AuthService, UserService],
+  providers: [StorageManagerService, BlogService, AuthService, UserService, PictureResolver],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

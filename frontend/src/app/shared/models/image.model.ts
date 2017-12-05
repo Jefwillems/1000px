@@ -1,10 +1,12 @@
+import { User } from './user.model';
+
 export class Image {
 
     id: string;
     url: string;
     title: string;
     pathToPicture: string;
-    author: string;
+    author: User;
     description: string;
     camera: string;
     lens: string;

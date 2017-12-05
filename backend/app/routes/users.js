@@ -7,7 +7,9 @@ let auth = jwt({
     secret: process.env.PX1000_SECRET,
     userProperty: 'payload'
 });
-
+const sortByDate = (a, b) => {
+    return new Date(b.datePublished) - new Date(a.datePublished);
+};
 // <link>/api/users/
 routes.get('/', (req, res) => {
     res.json({
@@ -30,6 +32,7 @@ routes.get('/profile', auth, (req, res) => {
         })
         .exec((error, user) => {
             let images = user.pictures;
+            images.sort(sortByDate);
             for (let i = 0; i < images.length; i++) {
                 images[i].pathToPicture = images[i].pathToPicture.replace("app/public", "/file");
             }
@@ -61,7 +64,6 @@ routes.get('/all', auth, (req, res) => {
         if (index > -1) {
             values.splice(index, 1);
         }
-        console.log(values);
     }
 
     User.find({}, function (err, users) {

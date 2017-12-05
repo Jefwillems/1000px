@@ -8,11 +8,12 @@ import { PictureResolver } from './picture/picture-resolver.service';
 const appRoutes: Routes = [
     { path: 'upload', component: UploadComponent, canActivate: [AuthGuard] },
     {
-        path: 'pictures', children: [
+        path: 'p', children: [
+            { path: '', redirectTo: '/', pathMatch: 'full' },
             { path: ':id', component: PictureComponent, resolve: { picture: PictureResolver } }
         ]
     },
- //   { path: '**', redirectTo: '/' }
+    //   { path: '**', redirectTo: '/' }
 ];
 
 @NgModule({

@@ -21,6 +21,12 @@ export class ImageService {
     });
   }
 
+  fetchPopular(): Observable<Image[]> {
+    return this.http.get(this._url + 'popular').map(response => {
+      return response.json().map(fromJSON);
+    });
+  }
+
   fetchPicked(): Observable<Image[]> {
     return this.http.get(this._url + 'picks').map(response => {
       return response.json().map(fromJSON);
@@ -28,14 +34,36 @@ export class ImageService {
   }
 
   fetchImage(id: String): Observable<Image> {
-    return this.http.get(this._url + id).map(response => response.json().map(fromJSON));
+    return this.http.get(this._url + 'get/' + id).map(response => response.json()).map(fromJSON);
+  }
+  
+  hasBeenLiked(id: String): Observable<boolean> {
+    return this.http.get(this._url + 'hasBeenLiked/' + id,
+      { headers: new Headers({ Authorization: `Bearer ${this.auth.token}` }) })
+      .map(response => response.json())
+      .map(json => json.response);
   }
 
-  upload(title: string, file: File): Observable<Image> {
+  upload(
+    title: string,
+    file: File,
+    description: string,
+    camera: string,
+    lens: string
+  ): Observable<Image> {
     console.log({ title: title, file: file });
     const formData = new FormData();
     formData.append('title', title);
     formData.append('picture', file);
+    if (description) {
+      formData.append('description', description);
+    }
+    if (camera) {
+      formData.append('camera', camera);
+    }
+    if (lens) {
+      formData.append('lens', lens);
+    }
     return this.http.post(
       `${this._url}add`,
       formData,
@@ -43,5 +71,11 @@ export class ImageService {
     ).map(res => res.json()).map(fromJSON);
   }
 
- 
+  like(id: string): Observable<Image> {
+    return this.http.post(this._url + 'like/' + id,
+      new FormData(),
+      { headers: new Headers({ Authorization: `Bearer ${this.auth.token}` }) })
+      .map(response => response.json()).map(fromJSON);
+  }
+
 }
