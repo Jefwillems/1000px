@@ -10,6 +10,19 @@ let auth = jwt({
 const sortByDate = (a, b) => {
     return new Date(b.datePublished) - new Date(a.datePublished);
 };
+
+const getPopulatedUserById = (id, cb) => {
+    User.findById(id)
+        .populate({
+            path: 'pictures',
+            model: 'Picture'
+        })
+        .populate({
+            path: 'likes',
+            model: 'Picture'
+        })
+        .exec(cb);
+}
 // <link>/api/users/
 routes.get('/', (req, res) => {
     res.json({
@@ -62,6 +75,10 @@ routes.get('/profile', auth, (req, res) => {
                 model: 'User'
             }
         })
+        .populate({
+            path: 'following',
+            model: 'User'
+        })
         .exec((error, user) => {
             let images = user.pictures;
             images.sort(sortByDate);
@@ -102,6 +119,35 @@ routes.get('/all', auth, (req, res) => {
         res.json(users);
     });
 });
+
+routes.post('/follow/:id', auth, (req, res) => {
+    getPopulatedUserById(req.payload._id, (err, user) => {
+        if (err) return req.status(500).json({
+            msg: 'Logged in user could not be found.',
+            err: err
+        });
+        getPopulatedUserById(req.params['id'], (err, user2) => {
+            if (err) return req.status(500).json({
+                msg: 'User could not be found.',
+                err: err
+            });
+            if (user._id === user2._id) {
+                return req.status(403).json({
+                    msg: 'Can\'t follow yourself.',
+                    err: err
+                });
+            }
+            user.following.push(user2);
+            user.save((err) => {
+                if (err) req.status(500).json({
+                    msg: 'User could not be saved.',
+                    err: err
+                });
+                res.json(user);
+            });
+        });
+    })
+})
 
 
 module.exports = routes;
