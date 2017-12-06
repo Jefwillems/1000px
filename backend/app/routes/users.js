@@ -17,6 +17,34 @@ routes.get('/', (req, res) => {
     });
 });
 
+routes.get('/isAdmin', auth, (req, res) => {
+    const currentUser_id = req.payload._id;
+    User.findOne({
+            _id: currentUser_id
+        })
+        .populate({
+            path: 'likes',
+            model: 'Picture'
+        })
+        .populate({
+            path: 'pictures',
+            model: 'Picture',
+            populate: {
+                path: 'author',
+                model: 'User'
+            }
+        })
+        .exec((err, user) => {
+            if (err) res.status(500).json({
+                msg: 'couldn\'t find user',
+                err: err
+            });
+            return res.json({
+                isAdmin: user.admin
+            });
+        });
+});
+
 routes.get('/profile', auth, (req, res) => {
     const currentUser_id = req.payload._id;
     User.findOne({
@@ -28,7 +56,11 @@ routes.get('/profile', auth, (req, res) => {
         })
         .populate({
             path: 'pictures',
-            model: 'Picture'
+            model: 'Picture',
+            populate: {
+                path: 'author',
+                model: 'User'
+            }
         })
         .exec((error, user) => {
             let images = user.pictures;

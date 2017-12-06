@@ -21,6 +21,9 @@ import { UploadComponent } from './upload/upload.component';
 import { UserService } from './shared/services/user.service';
 import { PictureComponent } from './picture/picture.component';
 import { PictureResolver } from './picture/picture-resolver.service';
+import { AuthGuard } from './shared/guards/auth.guard';
+import { AdminGuard } from './shared/guards/admin.guard';
+
 
 @NgModule({
   declarations: [
@@ -39,7 +42,7 @@ import { PictureResolver } from './picture/picture-resolver.service';
     ProfileModule,
     AppRoutingModule
   ],
-  providers: [StorageManagerService, BlogService, AuthService, UserService, PictureResolver],
+  providers: [StorageManagerService, BlogService, AuthService, UserService, PictureResolver, AuthGuard, AdminGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

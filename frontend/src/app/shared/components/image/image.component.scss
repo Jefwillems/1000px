@@ -15,27 +15,9 @@
     right: 0;
     bottom: 0;
     display: none;
-    .like {
-      &-btn {
-        background-color: transparent;
-        border: none;
-        .material-icons {
-          color: white;
-          font-size: 40px;
-        }
-        &.liked {
-          .material-icons {
-            color: rgb(255, 72, 72);
-          }
-        }
-        &:focus {
-          outline: 0;
-        }
-        &:hover {
-          .material-icons {
-            color: rgb(255, 72, 72);
-          }
-        }
+    .author {
+      span {
+        color: white;
       }
     }
     .title {

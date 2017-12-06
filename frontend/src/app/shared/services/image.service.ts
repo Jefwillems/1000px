@@ -36,7 +36,7 @@ export class ImageService {
   fetchImage(id: String): Observable<Image> {
     return this.http.get(this._url + 'get/' + id).map(response => response.json()).map(fromJSON);
   }
-  
+
   hasBeenLiked(id: String): Observable<boolean> {
     return this.http.get(this._url + 'hasBeenLiked/' + id,
       { headers: new Headers({ Authorization: `Bearer ${this.auth.token}` }) })
@@ -76,6 +76,19 @@ export class ImageService {
       new FormData(),
       { headers: new Headers({ Authorization: `Bearer ${this.auth.token}` }) })
       .map(response => response.json()).map(fromJSON);
+  }
+
+  remove(id): Observable<Image> {
+    return this.http.delete(this._url + 'remove/' + id,
+      { headers: new Headers({ Authorization: `Bearer ${this.auth.token}` }) })
+      .map(res => res.json()).map(obj => Image.fromJSON(obj));
+  }
+
+  flag(id): Observable<Image> {
+    return this.http.post(this._url + 'flag/' + id,
+      new FormData(),
+      { headers: new Headers({ Authorization: `Bearer ${this.auth.token}` }) })
+      .map(res => res.json()).map(json => Image.fromJSON(json));
   }
 
 }

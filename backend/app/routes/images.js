@@ -12,6 +12,7 @@ let auth = jwt({
     userProperty: 'payload',
 });
 
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './app/public/img/')
@@ -37,13 +38,40 @@ const sortByLikes = (a, b) => {
 const replacePath = (pic) => {
     pic.pathToPicture = pic.pathToPicture.replace("app/public", "/file");
 };
-
-router.get('/get/:id', (req, res) => {
-    Picture.findById(req.params['id'])
+const getPopulatedPicById = (id) => {
+    return Picture.findById(id)
+        .populate({
+            path: 'author',
+            model: 'User',
+            populate: {
+                path: 'pictures',
+                model: 'Picture'
+            }
+        })
+};
+const getPopulatedPictures = () => {
+    return Picture.find()
         .populate({
             path: 'author',
             model: 'User'
+        });
+}
+
+const getCurrentUser = (id, cb) => {
+    User.findById(id)
+        .populate({
+            path: 'pictures',
+            model: 'Picture'
         })
+        .populate({
+            path: 'likes',
+            model: 'Picture'
+        })
+        .exec(cb);
+}
+
+router.get('/get/:id', (req, res) => {
+    getPopulatedPicById(req.params['id'])
         .exec((err, pic) => {
             if (err) {
                 return res.status(500).json({
@@ -62,8 +90,7 @@ router.get('/get/:id', (req, res) => {
 });
 
 router.get('/fresh', (req, response) => {
-    //TODO GET FILEPATHS FROM DATABASE INSTEAD OF READING DIRECTORY
-    Picture.find((err, res) => {
+    getPopulatedPictures().exec((err, res) => {
         res.sort(sortByDate);
         for (let i = 0; i < res.length; i++) {
             replacePath(res[i]);
@@ -77,6 +104,9 @@ router.get('/popular', (req, res) => {
         likes: {
             $gte: 2
         }
+    }).populate({
+        path: 'author',
+        model: 'User'
     }).exec((err, pics) => {
         pics.sort(sortByLikes);
         for (let i = 0; i < pics.length; i++) {
@@ -89,7 +119,10 @@ router.get('/popular', (req, res) => {
 router.get('/picks', (req, res) => {
     Picture.find({
         flagged: true
-    }, (err, images) => {
+    }).populate({
+        path: 'author',
+        model: 'User'
+    }).exec((err, images) => {
         if (err) res.status(500).json({
             err: err,
             msg: 'Something went wrong when searching for flagged pictures.'
@@ -99,7 +132,7 @@ router.get('/picks', (req, res) => {
             replacePath(images[i]);
         }
         res.json(images);
-    })
+    });
 });
 router.get('/hasBeenLiked/:id', auth, (req, res) => {
     Picture.findById(req.params.id)
@@ -221,6 +254,62 @@ router.post('/add', auth, upload.single('picture'), (req, res, next) => {
 
         });
     }
+});
+
+router.delete('/remove/:id', auth, (req, res) => {
+    /*getCurrentUser(req.payload._id, (err, user) => {
+        if (err) res.status(500).json({
+            msg: 'couldn\'t find user',
+            err: err
+        });
+        
+    })*/
+    getPopulatedPicById(req.params['id'])
+        .exec((err, pic) => {
+            if (err) res.status(500).json({
+                msg: 'couldn\'t find picture',
+                err: err
+            });
+            console.log(err, pic)
+            pic.remove((err) => {
+                console.log(err);
+                if (err) return res.status(500).json({
+                    msg: 'error deleting picture',
+                    err: JSON.stringify(err)
+                });
+                return res.json(pic);
+            })
+        });
+
+
+});
+
+router.post('/flag/:id', auth, (req, res) => {
+    getCurrentUser(req.payload._id, (err, user) => {
+        if (err) return res.status(500).json({
+            msg: 'Logged in user could not be found',
+            err: err
+        });
+        if (!user.admin) {
+            return res.status(403).json({
+                msg: 'only admins can perform this action'
+            });
+        }
+        getPopulatedPicById(req.params['id']).exec((err, pic) => {
+            if (err) return res.status(500).json({
+                msg: 'Picture could not be found',
+                err: err
+            });
+            pic.flagged = true;
+            pic.save((err) => {
+                if (err) return res.status(500).json({
+                    msg: 'Picture could not be saved correctly.',
+                    err: err
+                });
+                res.json(pic);
+            })
+        });
+    })
 });
 
 module.exports = router;

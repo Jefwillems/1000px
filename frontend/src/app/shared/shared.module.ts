@@ -2,6 +2,7 @@ import { ImageComponent } from './components/image/image.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { AdminComponent } from './components/admin/admin.component';
 
 @NgModule({
     imports: [
@@ -9,10 +10,12 @@ import { RouterModule } from '@angular/router';
         RouterModule
     ],
     declarations: [
-        ImageComponent
+        ImageComponent,
+        AdminComponent
     ],
     exports: [
-        ImageComponent
+        ImageComponent,
+        AdminComponent
     ]
 })
 

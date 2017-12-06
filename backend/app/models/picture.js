@@ -44,6 +44,28 @@ const PictureSchema = new Schema({
         type: Boolean,
         default: false
     }
-})
+});
+
+PictureSchema.pre('remove', (next) => {
+    mongoose.model('User').update({}, {
+        $pull: {
+            likes: this._id
+        }
+    }, {
+        safe: true,
+        multi: true
+    }, () => {
+        mongoose.model('User').update({}, {
+            $pull: {
+                pictures: this._id
+            }
+        }, {
+            safe: true,
+            multi: true
+        }, next);
+    });
+
+});
+
 
 mongoose.model('Picture', PictureSchema);
