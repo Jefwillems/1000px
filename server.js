@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 let mongoose = require('mongoose');
 let passport = require('passport');
+let path = require('path');
 
 const port = process.env.PORT || 3000;
 
@@ -51,7 +52,10 @@ app.get('/', function (req, res) {
 });
 
 app.use('/file', express.static('app/public'));
-
+app.all('*', (req, res) => {
+    const indexFile = `${path.join(__dirname, 'dist')}/index.html`;
+    res.status(200).sendFile(indexFile);
+});
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
@@ -62,3 +66,4 @@ app.use(function (req, res, next) {
 app.listen(port, () => {
     console.log('Server listening at http://localhost:' + port);
 });
+
