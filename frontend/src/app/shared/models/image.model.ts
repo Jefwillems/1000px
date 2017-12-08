@@ -20,7 +20,7 @@ export class Image {
         img.url = json.url;
         img.title = json.title;
         img.pathToPicture = json.pathToPicture;
-        img.author = json.author;
+        img.author = User.fromJSON(json.author);
         img.description = json.description;
         img.camera = json.camera;
         img.lens = json.lens;

@@ -14,12 +14,28 @@ const sortByDate = (a, b) => {
 const getPopulatedUserById = (id, cb) => {
     User.findById(id)
         .populate({
+            path: 'likes',
+            model: 'Picture',
+            populate: {
+                path: 'author',
+                model: 'User'
+            }
+        })
+        .populate({
             path: 'pictures',
             model: 'Picture'
         })
         .populate({
-            path: 'likes',
-            model: 'Picture'
+            path: 'following',
+            model: 'User',
+            populate: {
+                path: 'pictures',
+                model: 'Picture',
+                populate: {
+                    path: 'author',
+                    model: 'User'
+                }
+            }
         })
         .exec(cb);
 }
@@ -30,7 +46,7 @@ routes.get('/', (req, res) => {
     });
 });
 
-routes.get('/isAdmin', auth, (req, res) => {
+routes.get('/isAdmin', auth, (req, res, next) => {
     const currentUser_id = req.payload._id;
     User.findOne({
             _id: currentUser_id
@@ -48,106 +64,88 @@ routes.get('/isAdmin', auth, (req, res) => {
             }
         })
         .exec((err, user) => {
-            if (err) res.status(500).json({
-                msg: 'couldn\'t find user',
-                err: err
-            });
+            if (err) return next(err);
             return res.json({
                 isAdmin: user.admin
             });
         });
 });
-
-routes.get('/profile', auth, (req, res) => {
-    const currentUser_id = req.payload._id;
-    User.findOne({
-            _id: currentUser_id
-        })
-        .populate({
-            path: 'likes',
-            model: 'Picture'
-        })
-        .populate({
-            path: 'pictures',
-            model: 'Picture',
-            populate: {
-                path: 'author',
-                model: 'User'
-            }
-        })
-        .populate({
-            path: 'following',
-            model: 'User'
-        })
-        .exec((error, user) => {
-            let images = user.pictures;
-            images.sort(sortByDate);
-            for (let i = 0; i < images.length; i++) {
-                images[i].pathToPicture = images[i].pathToPicture.replace("app/public", "/file");
-            }
-            if (error) {
-                res.status(500).json(error);
-            } else {
-                res.json(user);
-            }
-        });
-});
-
-routes.get('/get/:id', auth, (req, response) => {
-    let id = req.params['id'];
-    User.find({
-        _id: id
-    }, (err, res) => {
-        if (!err) {
-            response.json(res);
-        }
-    })
-});
-
-//route to return all users at <link>/api/users/all
-routes.get('/all', auth, (req, res) => {
-    let query = req.query.s;
-    if (query) {
-        let values = query.split(',');
-        let index = values.indexOf('password');
-        if (index > -1) {
-            values.splice(index, 1);
-        }
+routes.get('/profile/:id', auth, (req, res, next) => {
+    let userId = req.params['id'];
+    if (!userId) {
+        console.log('no user specified, defaulting to logged in user');
+        userId = req.payload._id;
     }
+    getPopulatedUserById(userId, (err, user) => {
+        if (err) return next(err)
+        let images = user.pictures;
+        images.sort(sortByDate);
+        for (let i = 0; i < images.length; i++) {
+            images[i].pathToPicture = images[i].pathToPicture.replace("app/public", "/file");
+        }
+        res.json(user);
 
-    User.find({}, function (err, users) {
-        res.json(users);
     });
 });
 
-routes.post('/follow/:id', auth, (req, res) => {
-    getPopulatedUserById(req.payload._id, (err, user) => {
-        if (err) return req.status(500).json({
-            msg: 'Logged in user could not be found.',
-            err: err
-        });
-        getPopulatedUserById(req.params['id'], (err, user2) => {
-            if (err) return req.status(500).json({
-                msg: 'User could not be found.',
-                err: err
-            });
-            if (user._id === user2._id) {
-                return req.status(403).json({
-                    msg: 'Can\'t follow yourself.',
-                    err: err
-                });
-            }
-            user.following.push(user2);
-            user.save((err) => {
-                if (err) req.status(500).json({
-                    msg: 'User could not be saved.',
-                    err: err
-                });
-                res.json(user);
-            });
-        });
-    })
+function flatten(arr) {
+    return Array.prototype.concat(...arr);
+}
+routes.get('/activity', auth, (req, res, next) => {
+    getPopulatedUserById(req.payload._id, (err, loggedUser) => {
+        if (err) return next(err);
+        const following = loggedUser.following;
+        const allPics = following.map((user) => {
+            return user.pictures
+        })
+        const pics = flatten(allPics).sort(sortByDate);
+        for (let i = 0; i < pics.length; i++) {
+            pics[i].pathToPicture = pics[i].pathToPicture.replace("app/public", "/file");
+        }
+        res.json(pics);
+    });
 })
 
+routes.get('/get/:id', auth, (req, response, next) => {
+    let id = req.params['id'];
+    getPopulatedUserById(id, (err, user) => {
+        if (err) return next(err);
+        let images = user.pictures;
+        for (let i = 0; i < images.length; i++) {
+            images[i].pathToPicture = images[i].pathToPicture.replace("app/public", "/file");
+        }
+        response.json(user);
+    });
+});
+
+routes.get('/loggedUser', auth, (req, res, next) => {
+    let id = req.payload._id;
+    getPopulatedUserById(id, (err, user) => {
+        if (err) return next(err);
+        if (user != null) {
+            let images = user.pictures;
+            console.log(images);
+            for (let i = 0; i < images.length; i++) {
+                images[i].pathToPicture = images[i].pathToPicture.replace("app/public", "/file");
+            }
+            images.sort(sortByDate);
+            res.json(user);
+        }
+    });
+});
+
+routes.post('/follow', auth, (req, res, next) => {
+    getPopulatedUserById(req.payload._id, (err, loggedUser) => {
+        if (err) return next(err);
+        getPopulatedUserById(req.body.id, (err, user) => {
+            if (err) return next(err);
+            loggedUser.following.push(user);
+            loggedUser.save((err) => {
+                if (err) return next(err);
+                res.json(user);
+            })
+        });
+    });
+});
 
 module.exports = routes;

@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 import { Headers } from '@angular/http';
 import 'rxjs/add/operator/map';
 
-const fromJSON = (img) => Image.fromJSON(img);
+const fromJSON = (img): Image => Image.fromJSON(img);
 
 @Injectable()
 export class ImageService {
@@ -20,6 +20,7 @@ export class ImageService {
       return response.json().map(fromJSON);
     });
   }
+ 
 
   fetchPopular(): Observable<Image[]> {
     return this.http.get(this._url + 'popular').map(response => {
@@ -34,7 +35,10 @@ export class ImageService {
   }
 
   fetchImage(id: String): Observable<Image> {
-    return this.http.get(this._url + 'get/' + id).map(response => response.json()).map(fromJSON);
+    return this.http.get(this._url + 'get/' + id).map(response => response.json()).map(json => {
+      const img: Image = Image.fromJSON(json);
+      return img;
+    });
   }
 
   hasBeenLiked(id: String): Observable<boolean> {
@@ -51,7 +55,6 @@ export class ImageService {
     camera: string,
     lens: string
   ): Observable<Image> {
-    console.log({ title: title, file: file });
     const formData = new FormData();
     formData.append('title', title);
     formData.append('picture', file);
@@ -76,6 +79,13 @@ export class ImageService {
       new FormData(),
       { headers: new Headers({ Authorization: `Bearer ${this.auth.token}` }) })
       .map(response => response.json()).map(fromJSON);
+  }
+
+  unlike(id: string): Observable<Image> {
+    return this.http.post(this._url + 'unlike/' + id,
+      new FormData(),
+      { headers: new Headers({ Authorization: `Bearer ${this.auth.token}` }) })
+      .map(res => res.json()).map(fromJSON);
   }
 
   remove(id): Observable<Image> {

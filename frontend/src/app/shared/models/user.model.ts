@@ -8,14 +8,19 @@ export class User {
     admin: boolean;
     likes: Image[];
     pictures: Image[];
-    static fromJSON(json: any): User {
+    static fromJSON(json: any, deep: boolean = false): User {
         const user = new User();
         user.id = json._id;
         user.username = json.username;
         user.email = json.username;
         user.admin = json.admin;
-        user.likes = json.likes.map(obj => Image.fromJSON(obj));
-        user.pictures = json.pictures.map(obj => Image.fromJSON(obj));
+        if (deep) {
+            user.likes = json.likes.map(obj => Image.fromJSON(obj));
+            user.pictures = json.pictures.map(obj => Image.fromJSON(obj));
+        } else {
+            user.likes = json.likes;
+            user.pictures = json.pictures;
+        }
         return user;
     }
     toJSON(): any {

@@ -1,35 +1,48 @@
 import { Injectable } from '@angular/core';
 import { BlogPost } from '../models/blog-post.model';
+import { Observable } from 'rxjs/Observable';
+import { Http } from '@angular/http';
+import { AuthService } from './auth.service';
+import { Headers } from '@angular/http';
+import 'rxjs/add/operator/map';
+
+const fromJSON = (json): BlogPost => {
+  return BlogPost.fromJSON(json);
+};
 
 @Injectable()
 export class BlogService {
 
-  blogPosts: BlogPost[];
+  private _url = '/api/blog';
 
-  constructor() {
-    this.blogPosts = [
-      {
-        title: 'Photography 101',
-        body: 'Loren ipsum blablablab labjkdajksbdajksdbs kdsjhsjkdfhsdjkfbsdjkbfjs jkdfjkdhfjksdhfkds sdhfsduhfsdjfhsdjfs',
-        author: 'Jef Willems',
-        date_created: new Date(),
-        date_modified: new Date()
-      },
-      {
-        title: 'Choosing the right lens',
-        body: 'Loren ipsum blablablab labjkdajksbdajksdbs kdsjhsjkdfhsdjkfbsdjkbfjs jkdfjkdhfjksdhfkds sdhfsduhfsdjfhsdjfs',
-        author: 'Jef Willems',
-        date_created: new Date(2017, 8, 12),
-        date_modified: new Date(2017, 8, 23)
-      }
-    ];
+  constructor(
+    private http: Http,
+    private auth: AuthService) { }
+
+  getLatestCreations(): Observable<BlogPost[]> {
+    return this.http.get(this._url + '/all')
+      .map(response => {
+        return response.json().map(fromJSON);
+      });
   }
 
-  getLatestCreations(): BlogPost[] {
-    return this.blogPosts.sort((a, b): number => {
-      const aStamp = a.date_created.getTime();
-      const bStamp = b.date_created.getTime();
-      return aStamp - bStamp;
-    });
+  uploadPost(title: string, text: string): Observable<BlogPost> {
+    console.log(title, text);
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('text', text);
+    return this.http.post(
+      this._url + '/add',
+      {
+        title: title,
+        text: text
+      },
+      { headers: new Headers({ Authorization: `Bearer ${this.auth.token}` }) }
+    ).map(response => response.json()).map(fromJSON);
+  }
+
+  getPost(id: string): Observable<BlogPost> {
+    return this.http.get(this._url + '/get/' + id)
+      .map(response => response.json()).map(fromJSON);
   }
 }

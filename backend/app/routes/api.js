@@ -16,4 +16,7 @@ api.use('/auth', authenticationRoutes);
 const imgRoutes = require('./images');
 api.use('/img', imgRoutes);
 
+const blogRoutes = require('./blog');
+api.use('/blog', blogRoutes);
+
 module.exports = api;

@@ -70,15 +70,10 @@ const getCurrentUser = (id, cb) => {
         .exec(cb);
 }
 
-router.get('/get/:id', (req, res) => {
+router.get('/get/:id', (req, res, next) => {
     getPopulatedPicById(req.params['id'])
         .exec((err, pic) => {
-            if (err) {
-                return res.status(500).json({
-                    msg: 'An Error occured',
-                    err: err
-                });
-            }
+            if (err) return next(err);
             if (pic === null) {
                 return res.status(404).json({
                     msg: 'Image not found'
@@ -89,8 +84,9 @@ router.get('/get/:id', (req, res) => {
         });
 });
 
-router.get('/fresh', (req, response) => {
+router.get('/fresh', (req, response, next) => {
     getPopulatedPictures().exec((err, res) => {
+        if (err) return next(err);
         res.sort(sortByDate);
         for (let i = 0; i < res.length; i++) {
             replacePath(res[i]);
@@ -99,7 +95,7 @@ router.get('/fresh', (req, response) => {
     });
 });
 
-router.get('/popular', (req, res) => {
+router.get('/popular', (req, res, next) => {
     Picture.find({
         likes: {
             $gte: 2
@@ -108,6 +104,7 @@ router.get('/popular', (req, res) => {
         path: 'author',
         model: 'User'
     }).exec((err, pics) => {
+        if (err) return next(err);
         pics.sort(sortByLikes);
         for (let i = 0; i < pics.length; i++) {
             replacePath(pics[i]);
@@ -134,23 +131,13 @@ router.get('/picks', (req, res) => {
         res.json(images);
     });
 });
-router.get('/hasBeenLiked/:id', auth, (req, res) => {
+router.get('/hasBeenLiked/:id', auth, (req, res, next) => {
     Picture.findById(req.params.id)
         .exec((err, pic) => {
-            if (err) {
-                res.status(400).json({
-                    msg: 'Couldn\'t find picture with id: ' + req.params.imageID,
-                    err: err
-                })
-            }
+            if (err) return next(err);
             const currentUser_id = req.payload._id;
             User.findById(currentUser_id, (err, user) => {
-                if (err) {
-                    res.status(500).json({
-                        msg: 'Couldn\'t find user',
-                        err: err
-                    })
-                }
+                if (err) return next(err);
                 replacePath(pic);
                 const user_likes_ids = user.likes;
                 if (user_likes_ids.indexOf('' + pic._id) >= 0) {
@@ -166,26 +153,50 @@ router.get('/hasBeenLiked/:id', auth, (req, res) => {
         });
 });
 
-router.post('/like/:imageID', auth, (req, res) => {
+router.post('/unlike/:imageID', auth, (req, res, next) => {
+    User.findOneAndUpdate({
+        _id: req.payload._id
+    }, {
+        $pull: {
+            likes: req.params['imageID']
+        }
+    }, (err, data) => {
+        if (err) return next(err);
+        Picture.findOneAndUpdate({
+                _id: req.params['imageID']
+            }, {
+                $inc: {
+                    likes: -1
+                }
+            }, {
+                upsert: true,
+                'new': true
+            })
+            .populate({
+                path: 'author',
+                model: 'User',
+                populate: {
+                    path: 'pictures',
+                    model: 'Picture'
+                }
+            })
+            .exec((err, pic) => {
+                if (err) return next(err);
+                res.json(pic);
+            });
+    })
+});
+
+router.post('/like/:imageID', auth, (req, res, next) => {
 
     Picture.findById(req.params.imageID).populate({
         path: 'author',
         model: 'User'
     }).exec((err, pic) => {
-        if (err) {
-            res.status(400).json({
-                msg: 'Couldn\'t find picture with id: ' + req.params.imageID,
-                err: err
-            })
-        }
+        if (err) return next(err);
         const currentUser_id = req.payload._id;
         User.findById(currentUser_id, (err, user) => {
-            if (err) {
-                res.status(500).json({
-                    msg: 'An Error occured',
-                    err: err
-                });
-            }
+            if (err) return next(err);
             replacePath(pic);
             const user_likes_ids = user.likes;
             if (user_likes_ids.indexOf('' + pic._id) >= 0) {
@@ -194,19 +205,9 @@ router.post('/like/:imageID', auth, (req, res) => {
             user.likes.push(pic);
             pic.likes += 1;
             user.save((err) => {
-                if (err) {
-                    res.status(500).json({
-                        msg: 'An Error occured',
-                        err: err
-                    });
-                }
+                if (err) return next(err);
                 pic.save((err) => {
-                    if (err) {
-                        res.status(500).json({
-                            msg: 'An Error occured',
-                            err: err
-                        });
-                    }
+                    if (err) return next(err);
                     return res.json(pic);
                 })
             })
@@ -233,21 +234,14 @@ router.post('/add', auth, upload.single('picture'), (req, res, next) => {
         pic.camera = req.body.camera;
         pic.lens = req.body.lens;
         const currentUser_id = req.payload._id;
-        //TODO: pic author, user.pictures
         pic.author = currentUser_id;
         pic.save(err => {
-            if (err) res.status(500).json({
-                err: err
-            });
+            if (err) return next(err);
             User.findById(currentUser_id, (err, user) => {
-                if (err) res.status(500).json({
-                    err: err
-                });
+                if (err) return next(err);
                 user.pictures.push(pic);
                 user.save(err => {
-                    if (err) res.status(500).json({
-                        err: err
-                    });
+                    if (err) return next(err);
                     res.json(pic);
                 })
             });
@@ -256,27 +250,12 @@ router.post('/add', auth, upload.single('picture'), (req, res, next) => {
     }
 });
 
-router.delete('/remove/:id', auth, (req, res) => {
-    /*getCurrentUser(req.payload._id, (err, user) => {
-        if (err) res.status(500).json({
-            msg: 'couldn\'t find user',
-            err: err
-        });
-        
-    })*/
+router.delete('/remove/:id', auth, (req, res, next) => {
     getPopulatedPicById(req.params['id'])
         .exec((err, pic) => {
-            if (err) res.status(500).json({
-                msg: 'couldn\'t find picture',
-                err: err
-            });
-            console.log(err, pic)
+            if (err) return next(err);
             pic.remove((err) => {
-                console.log(err);
-                if (err) return res.status(500).json({
-                    msg: 'error deleting picture',
-                    err: JSON.stringify(err)
-                });
+                if (err) return next(err);
                 return res.json(pic);
             })
         });
@@ -284,28 +263,19 @@ router.delete('/remove/:id', auth, (req, res) => {
 
 });
 
-router.post('/flag/:id', auth, (req, res) => {
+router.post('/flag/:id', auth, (req, res, next) => {
     getCurrentUser(req.payload._id, (err, user) => {
-        if (err) return res.status(500).json({
-            msg: 'Logged in user could not be found',
-            err: err
-        });
+        if (err) return next(err);
         if (!user.admin) {
             return res.status(403).json({
                 msg: 'only admins can perform this action'
             });
         }
         getPopulatedPicById(req.params['id']).exec((err, pic) => {
-            if (err) return res.status(500).json({
-                msg: 'Picture could not be found',
-                err: err
-            });
+            if (err) return next(err);
             pic.flagged = true;
             pic.save((err) => {
-                if (err) return res.status(500).json({
-                    msg: 'Picture could not be saved correctly.',
-                    err: err
-                });
+                if (err) return next(err);
                 res.json(pic);
             })
         });

@@ -23,16 +23,18 @@ mongoose.connect(process.env.PX1000_DB, {
     useMongoClient: true
 });
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
 require('./app/models/user');
 require('./app/models/picture');
 require('./app/models/blogpost');
 
 require('./config/passport');
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: false
-}));
+
 app.use(cookieParser());
 // Use morgan for logging
 app.use(morgan('dev'));
@@ -50,6 +52,20 @@ app.get('/', function (req, res) {
 
 app.use('/file', express.static('app/public'));
 
+app.use(function (req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+});
+app.use(function (err, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
+});
 //listen on the specified port
 
 app.listen(port, () => {

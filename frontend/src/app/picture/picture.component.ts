@@ -1,8 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer, Input } from '@angular/core';
 import { Image } from '../shared/models/image.model';
-import { ActivatedRoute } from '@angular/router';
-import { Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ImageService } from '../shared/services/image.service';
 
 @Component({
@@ -24,18 +22,28 @@ export class PictureComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.data.subscribe(resolved => this.img = resolved['picture']);
+    this.route.data.subscribe(resolved => {
+      this.img = resolved['picture'];
+    });
     this.is.hasBeenLiked(this.img.id).subscribe(bool => {
-      console.log(bool);
       this.liked = bool;
     });
 
   }
 
   like($event) {
-    this.is.like(this.img.id).subscribe(pic => this.img = pic);
+    if (this.liked) {
+      this.liked = false;
+      this.is.unlike(this.img.id).subscribe(pic => {
+        this.img = pic;
+      });
+    } else {
+      this.liked = true;
+      this.is.like(this.img.id).subscribe(pic => {
+        this.img = pic;
+      });
+    }
+
   }
-
-
 
 }

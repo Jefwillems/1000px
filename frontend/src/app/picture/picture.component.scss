@@ -85,17 +85,32 @@
           }
           &:hover,
           &:focus,
-          &:active,
-          &.liked {
-            outline: none;
-            &:before {
-              transform: scale(0);
+          &:active {
+            &.liked {
+              outline: none;
+              &:before {
+                transform: scale(0);
+              }
+            }
+            &.not-liked::before {
+              transform: scale(2);
             }
           }
           &:hover,
           &.liked {
+            &::before {
+              transform: scale(0);
+            }
             border-color: #ff3333;
             color: white;
+          }
+          &.not-liked {
+            &:focus,
+            &:hover,
+            &:active {
+              outline: none;
+            }
+            border: none;
           }
         }
       }

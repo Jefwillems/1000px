@@ -6,15 +6,20 @@ const BlogPostSchema = new Schema({
         type: String,
         required: true
     },
-    contents: {
+    text: {
         type: String,
         required: true
     },
-    Author: {
+    author: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
+    },
+    date_created: {
+        type: Date,
+        required: true,
+        default: Date.now
     }
 });
 
-module.exports = mongoose.model('BlogPost', BlogPostSchema)
+mongoose.model('BlogPost', BlogPostSchema);

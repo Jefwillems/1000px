@@ -47,5 +47,43 @@ export class AuthService {
     }
   }
 
- 
+  checkUserNameAvailability(username: string): Observable<boolean> {
+    return this.http.post(`${this.url}auth/checkusername`, { username: username }).map(res => res.json())
+      .map(item => {
+        if (item.username === 'alreadyexists') {
+          return false;
+        } else {
+          return true;
+        }
+      });
+  }
+
+  checkEmailAvailability(email: string): Observable<boolean> {
+    return this.http.post(
+      `${this.url}auth/checkemail`,
+      { email: email })
+      .map(res => res.json()).map(item => {
+        if (item.email === 'alreadyexists') {
+          return false;
+        } else {
+          return true;
+        }
+      });
+  }
+
+  signup(username: string, password: string, email: string): Observable<boolean> {
+    return this.http.post(`${this.url}auth/signup`, { username: username, password: password, email: email })
+      .map(res => res.json()).map(res => {
+        const token = res.token;
+        if (token) {
+          this.storageManager.store('currentUser', { username: username, token: res.token });
+          this._user$.next(username);
+          return true;
+        } else {
+          return false;
+        }
+      });
+  }
+
+
 }

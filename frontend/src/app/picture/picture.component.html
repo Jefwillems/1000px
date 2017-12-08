@@ -7,19 +7,19 @@
       <div class="header">
         <div class="avatar"></div>
         <div class="author">
-          <a [routerLink]="['/p/'+img.author.username]">{{img.author.username}}</a>
+          <a [routerLink]="['/profile/'+img?.author.id]">{{img?.author.username}}</a>
         </div>
       </div>
       <div class="buttons">
-        <button class="like" (click)="like($event)" [ngClass]="[liked?'liked':'not-liked']" [disabled]="liked">
-          <i class="material-icons">favorite_border</i>{{img.likes}}
+        <button class="like" (click)="like($event)" [ngClass]="[liked?'liked':'not-liked']">
+          <i class="material-icons">favorite_border</i>{{img?.likes}}
         </button>
       </div>
       <div class="info">
-        <h4>{{img.title}}</h4>
-        <p>{{img.description}}</p>
-        <p>{{img.camera}}</p>
-        <p>{{img.lens}}</p>
+        <h4>{{img?.title}}</h4>
+        <p>{{img?.description}}</p>
+        <p>{{img?.camera}}</p>
+        <p>{{img?.lens}}</p>
       </div>
     </div>
   </div>

@@ -31,7 +31,6 @@ export class AdminComponent implements OnInit {
 
   flag(id) {
     this.is.flag(id).subscribe(img => {
-      console.log(img);
     });
   }
 }

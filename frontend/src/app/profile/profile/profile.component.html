@@ -1,10 +1,11 @@
 <section>
-  <h2>{{username}}</h2>
+  <h2>{{profile?.username}}</h2>
+  <button (click)="follow($event)">follow</button>
 </section>
 <section>
   <div class="wrapper">
     <div class="images">
-      <div *ngFor='let image of images' class="images-item">
+      <div *ngFor='let image of profile?.pictures' class="images-item">
         <app-image [image]="image"></app-image>
       </div>
     </div>

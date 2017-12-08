@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { BlogPost } from '../../shared/models/blog-post.model';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-blog-detail',
@@ -7,14 +9,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BlogDetailComponent implements OnInit {
 
-  public text: String;
+  private _blogpost: BlogPost;
 
-  constructor() { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit() {
-    this.text = `## Hello world
+    this.route.data.subscribe(resolved => {
+      this._blogpost = resolved['blogpost'];
+    });
+  }
 
-    * this is a test`;
+  get blogpost() {
+    return this._blogpost;
   }
 
 }

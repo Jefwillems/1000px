@@ -51,11 +51,8 @@ export class UploadComponent implements OnInit {
     const lens = this.upload.value.lens;
     this.is.upload(title, file, description, camera, lens).subscribe(res => {
       if (res.pathToPicture && res.id) {
-        console.log('to profile');
         this.router.navigate(['/profile']);
       } else {
-        console.log('to upload');
-        console.log(res);
         this.router.navigate(['/upload']);
       }
     });

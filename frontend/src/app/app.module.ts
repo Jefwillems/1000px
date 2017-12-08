@@ -23,6 +23,8 @@ import { PictureComponent } from './picture/picture.component';
 import { PictureResolver } from './picture/picture-resolver.service';
 import { AuthGuard } from './shared/guards/auth.guard';
 import { AdminGuard } from './shared/guards/admin.guard';
+import { ProfileResolver } from './profile/profile/profile-resolver.service';
+import { EditPictureComponent } from './picture/edit-picture/edit-picture.component';
 
 
 @NgModule({
@@ -31,6 +33,7 @@ import { AdminGuard } from './shared/guards/admin.guard';
     NavigationComponent,
     UploadComponent,
     PictureComponent,
+    EditPictureComponent,
   ],
   imports: [
     BrowserModule,
@@ -42,7 +45,7 @@ import { AdminGuard } from './shared/guards/admin.guard';
     ProfileModule,
     AppRoutingModule
   ],
-  providers: [StorageManagerService, BlogService, AuthService, UserService, PictureResolver, AuthGuard, AdminGuard],
+  providers: [StorageManagerService, BlogService, AuthService, UserService, PictureResolver, AuthGuard, AdminGuard, ProfileResolver],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

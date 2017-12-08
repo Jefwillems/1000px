@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Image } from '../../shared/models/image.model';
 import { UserService } from '../../shared/services/user.service';
 import 'rxjs/add/operator/map';
+import { User } from '../../shared/models/user.model';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -10,25 +12,31 @@ import 'rxjs/add/operator/map';
 })
 export class ProfileComponent implements OnInit {
 
-  private _images: Image[];
-  private _name: string;
+  private _profile: User;
+  private _following: boolean;
 
-  constructor(private us: UserService) {
-    this.us.fetchProfile().subscribe(profile => {
-      this._images = profile.pictures.map(pic => Image.fromJSON(pic));
-      this._name = profile.username;
-    });
+  constructor(
+    private us: UserService,
+    private route: ActivatedRoute,
+    private router: Router) {
+    this._following = false;
   }
 
   ngOnInit() {
+    this.route.data.subscribe(resolved => {
+      console.log(resolved['profile']);
+      this._profile = resolved['profile'];
+    });
   }
 
-  get images(): Image[] {
-    return this._images;
+  get profile(): User {
+    return this._profile;
   }
 
-  get username(): string {
-    return this._name;
+  follow($event) {
+    this.us.followUser(this._profile.id).subscribe(user => {
+      console.log(user);
+    });
   }
 
 }

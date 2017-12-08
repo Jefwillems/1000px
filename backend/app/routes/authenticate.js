@@ -40,6 +40,21 @@ authRoutes.post('/checkusername', (req, res, next) => {
         }
     });
 });
+authRoutes.post('/checkemail', (req, res) => {
+    User.find({
+        email: req.body.email
+    }, function (err, result) {
+        if (result.length) {
+            res.json({
+                'email': 'alreadyexists'
+            })
+        } else {
+            res.json({
+                'email': 'ok'
+            })
+        }
+    });
+});
 
 //route to sign up a user at <link>/api/users/signup
 authRoutes.post('/signup', (req, res, next) => {
