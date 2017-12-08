@@ -46,7 +46,6 @@ describe("Server", () => {
             expect(data.status).toBe(200);
         });
         it("check body", () => {
-            console.log(data.body);
             expect(data.body.author.username).toBe("jefwillems3");
             expect(data.body.title).toBe("salt");
             expect(data.body.text).toBe("4");
@@ -54,6 +53,30 @@ describe("Server", () => {
 
         });
     });
-   
-  
+    describe("POST /api/img/flag/:id", () => {
+        var data = {};
+        beforeAll((done) => {
+            Request({
+                method: 'POST',
+                uri: `http://localhost:3000/api/img/flag/${process.env.TEST_VALID_IMG_ID}`,
+                json: true,
+                body: {
+
+                }
+            }, (error, response, body) => {
+                data.status = response.statusCode;
+                data.body = body;
+                done();
+            }).auth(null, null, true, process.env.TEST_VALID_TOKEN);
+        });
+        it("Status 200", () => {
+            expect(data.status).toBe(403);
+        });
+        it("Body", () => {
+            expect(data.body.msg).toBe('only admins can perform this action');
+            expect(data.body._id).toBeUndefined();
+
+        });
+    });
+
 });
