@@ -20,7 +20,7 @@ export class ImageService {
       return response.json().map(fromJSON);
     });
   }
- 
+
 
   fetchPopular(): Observable<Image[]> {
     return this.http.get(this._url + 'popular').map(response => {
