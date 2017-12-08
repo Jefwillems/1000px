@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Image } from '../../shared/models/image.model';
+import { ImageService } from '../../shared/services/image.service';
 
 @Component({
   selector: 'app-popular',
@@ -7,9 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PopularComponent implements OnInit {
 
-  constructor() { }
+  private _images: Image[];
+
+  constructor(private is: ImageService) {
+    this.is.fetchPopular().subscribe(images => {
+      this._images = images;
+    });
+  }
 
   ngOnInit() {
+  }
+
+  get images() {
+    return this._images;
   }
 
 }

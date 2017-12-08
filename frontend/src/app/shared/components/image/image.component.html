@@ -1,0 +1,15 @@
+<a [routerLink]="[urlToPic]">
+  <div class="img" [ngStyle]="{background: 'url(' + url + ')'}">
+    <div class="overlay">
+      <div class="overlay-content">
+        <div class="author">
+          <span>{{image.author.username}}</span>
+        </div>
+        <div class="title">
+          <span>{{image.title}}</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</a>

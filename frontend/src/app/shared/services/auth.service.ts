@@ -1,54 +1,89 @@
+import { BehaviorSubject, Observable } from 'rxjs/Rx';
+import 'rxjs/add/operator/map';
+import { Http } from '@angular/http';
 import { StorageManagerService } from './storage-manager.service';
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
+import { Headers } from '@angular/http';
 
 @Injectable()
 export class AuthService {
 
-  private url = 'http://localhost:3000';
-  private token: string;
+  private url = '/api/';
+  private _user$: BehaviorSubject<string>;
+  public redirectUrl: string;
 
   constructor(private http: Http,
     private storageManager: StorageManagerService) {
     const current = this.storageManager.retrieveObject('currentUser');
-    this.token = current && current.token;
+    this._user$ = new BehaviorSubject<string>(current && current.username);
   }
 
-  public logout() {
-    // remove user from local storage to log user out
-    this.storageManager.removeItem('currentUser');
+  get user$(): BehaviorSubject<string> {
+    return this._user$;
   }
 
-  public login(username: string, password: string) {
-    return this.http.post(this.url + '/api/auth/login', { username: username, password: password })
-      .map((response: Response) => {
-        console.log(response);
-        // login successful if there's a jwt token in the response
-        const token = response.json() && response.json().token;
+  get token() {
+    return this.storageManager.retrieveObject('currentUser').token;
+  }
+
+  login(username: string, password: string): Observable<boolean> {
+    return this.http.post(this.url + 'auth/login', { username: username, password: password })
+      .map(res => res.json()).map(res => {
+        const token = res.token;
         if (token) {
-          this.token = token;
-          // store user details and jwt token in local storage to keep user logged in between page refreshes
-          this.storageManager.store('currentUser', JSON.stringify({ username: response.json().user.username, token: token }));
+          this.storageManager.store('currentUser', { username: username, token: token });
+          this._user$.next(username);
+          return true;
         } else {
-          this.logout();
+          return false;
         }
       });
   }
 
-  public getUsers() {
-    this.http.get(this.url + '/api/users/all').map((response: Response) => {
-      const obj = response.json();
-      console.log(obj);
-    });
+  logout() {
+    if (this.user$.getValue()) {
+      this.storageManager.removeItem('currentUser');
+      setTimeout(() => this._user$.next(null));
+    }
   }
 
-  public isAuthenticated(): boolean {
-    const user = this.storageManager.retrieveObject('currentUser');
-    return user && user.token;
+  checkUserNameAvailability(username: string): Observable<boolean> {
+    return this.http.post(`${this.url}auth/checkusername`, { username: username }).map(res => res.json())
+      .map(item => {
+        if (item.username === 'alreadyexists') {
+          return false;
+        } else {
+          return true;
+        }
+      });
   }
-  public cheat() {
-    this.storageManager.store('currentUser', { token: 'sdkufhsdkfhj' });
+
+  checkEmailAvailability(email: string): Observable<boolean> {
+    return this.http.post(
+      `${this.url}auth/checkemail`,
+      { email: email })
+      .map(res => res.json()).map(item => {
+        if (item.email === 'alreadyexists') {
+          return false;
+        } else {
+          return true;
+        }
+      });
   }
+
+  signup(username: string, password: string, email: string): Observable<boolean> {
+    return this.http.post(`${this.url}auth/signup`, { username: username, password: password, email: email })
+      .map(res => res.json()).map(res => {
+        const token = res.token;
+        if (token) {
+          this.storageManager.store('currentUser', { username: username, token: res.token });
+          this._user$.next(username);
+          return true;
+        } else {
+          return false;
+        }
+      });
+  }
+
+
 }

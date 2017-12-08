@@ -12,19 +12,24 @@
     <li class="nav-list-item">
       <a [routerLink]="['/blog']">Blog</a>
     </li>
-    <li class="dropdown nav-list-item">
+    <li class="nav-list-item">
+      <a [routerLink]="['/upload']">Upload</a>
+    </li>
+    <li *ngIf="(currentUser | async) else loginLink" class="dropdown nav-list-item">
       <div class="dropdown-text">Account</div>
       <ul class="dropdown-content">
         <li class="dropdown-content-item">
-          <a href="#">Profile</a>
+          <a [routerLink]="['/profile']">Profile</a>
         </li>
         <li class="dropdown-content-item">
-          <a href="#">Settings</a>
-        </li>
-        <li class="dropdown-content-item">
-          <a href="#">log out</a>
+          <a (click)="logout()">log out</a>
         </li>
       </ul>
     </li>
+    <ng-template #loginLink>
+      <li class="nav-list-item">
+        <a [routerLink]="['/login']">Login</a>
+      </li>
+    </ng-template>
   </ul>
 </nav>

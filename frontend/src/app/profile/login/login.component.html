@@ -1,3 +1,16 @@
-<p>
-  login works!
-</p>
+<div class="login">
+  <form [formGroup]="user" (ngSubmit)='onSubmit()' class="login-form">
+    <h3>Login</h3>
+    <div class='login-form-group'>
+      <label for="username">Username:</label>
+      <input type="text" id="username" formControlName='username'>
+    </div>
+    <div class='login-form-group'>
+      <label for="password">Password:</label>
+      <input type="password" id="password" formControlName='password'>
+    </div>
+    <button type="submit" [disabled]="!user.valid">log in</button>
+    <div *ngIf='errorMsg' class='error'>{{errorMsg}}</div>
+  </form>
+  <a class='link' routerLink="/signup">register</a>
+</div>

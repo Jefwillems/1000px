@@ -1,4 +1,8 @@
 <app-tip></app-tip>
-<p>
-  page works!
-</p>
+<div class="wrapper">
+  <div class="images">
+    <div *ngFor='let image of images' class="images-item">
+      <app-image [image]="image"></app-image>
+    </div>
+  </div>
+</div>

@@ -382,10 +382,11 @@ module.exports = {
       "debug": "warning"
     }),
     new ProgressPlugin(),
-    new CircularDependencyPlugin({
-      "exclude": /(\\|\/)node_modules(\\|\/)/,
-      "failOnError": false
-    }),
+    /*  new CircularDependencyPlugin({
+        "exclude": /(\\|\/)node_modules(\\|\/)/,
+        "failOnError": false,
+        "cwd": process.cwd()
+      }),*/
     new NamedLazyChunksWebpackPlugin(),
     new HtmlWebpackPlugin({
       "template": "./src/index.html",
@@ -476,7 +477,12 @@ module.exports = {
       '/api': {
         "target": 'http://localhost:3000/',
         "secure": false
+      },
+      "/file": {
+        "target": 'http://localhost:3000/',
+        "secure": false
       }
+
     }
   }
 };
